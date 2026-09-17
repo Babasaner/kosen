@@ -1,0 +1,317 @@
+@import url("https://fonts.googleapis.com/css?family=Lora:400,italic");
+
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    .all-unset {
+        all: unset;
+    }
+}
+
+/* 
+  =============================================================
+  POLICES COMMERCIALES : Gelion & ADAM.CG PRO
+  Dossier : public/fonts/
+  =============================================================
+*/
+
+/* Gelion Bold */
+@font-face {
+  font-family: 'Gelion';
+  src: url('/fonts/Gelion-Bold.woff2') format('woff2'),
+       url('/fonts/Gelion-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Gelion Regular */
+@font-face {
+  font-family: 'Gelion';
+  src: url('/fonts/Gelion-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ADAM.CG PRO Regular */
+@font-face {
+  font-family: 'ADAM.CG PRO';
+  src: url('/fonts/ADAM.CG PRO.woff2') format('woff2'),
+       url('/fonts/ADAM.CG PRO.woff') format('woff'),
+       url('/fonts/ADAM.CG PRO.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+
+:root {
+    --body-bold-font-family: "Gelion", Helvetica;
+    --body-bold-font-size: 16px;
+    --body-bold-font-style: normal;
+    --body-bold-font-weight: 700;
+    --body-bold-letter-spacing: 0px;
+    --body-bold-line-height: 20px;
+    --body-regular-font-family: "Gelion", Helvetica;
+    --body-regular-font-size: 16px;
+    --body-regular-font-style: normal;
+    --body-regular-font-weight: 400;
+    --body-regular-letter-spacing: 0px;
+    --body-regular-line-height: 20px;
+    --button-default-font-family: "ADAM.CG PRO", Helvetica;
+    --button-default-font-size: 16px;
+    --button-default-font-style: normal;
+    --button-default-font-weight: 400;
+    --button-default-letter-spacing: 0px;
+    --button-default-line-height: 16px;
+    --button-small-font-family: "ADAM.CG PRO", Helvetica;
+    --button-small-font-size: 14px;
+    --button-small-font-style: normal;
+    --button-small-font-weight: 400;
+    --button-small-letter-spacing: 0px;
+    --button-small-line-height: 16px;
+    --caption-bold-font-family: "Gelion", Helvetica;
+    --caption-bold-font-size: 14px;
+    --caption-bold-font-style: normal;
+    --caption-bold-font-weight: 700;
+    --caption-bold-letter-spacing: 1px;
+    --caption-bold-line-height: 16px;
+    --caption-regular-font-family: "Gelion", Helvetica;
+    --caption-regular-font-size: 14px;
+    --caption-regular-font-style: normal;
+    --caption-regular-font-weight: 400;
+    --caption-regular-letter-spacing: 1px;
+    --caption-regular-line-height: 16px;
+    --display-display-large-font-family: "ADAM.CG PRO", Helvetica;
+    --display-display-large-font-size: 64px;
+    --display-display-large-font-style: normal;
+    --display-display-large-font-weight: 400;
+    --display-display-large-letter-spacing: -1px;
+    --display-display-large-line-height: 72px;
+    --display-display-medium-font-family: "ADAM.CG PRO", Helvetica;
+    --display-display-medium-font-size: 48px;
+    --display-display-medium-font-style: normal;
+    --display-display-medium-font-weight: 400;
+    --display-display-medium-letter-spacing: -1px;
+    --display-display-medium-line-height: 56px;
+    --headings-h1-font-family: "ADAM.CG PRO", Helvetica;
+    --headings-h1-font-size: 40px;
+    --headings-h1-font-style: normal;
+    --headings-h1-font-weight: 400;
+    --headings-h1-letter-spacing: -1px;
+    --headings-h1-line-height: 48px;
+    --headings-h2-font-family: "ADAM.CG PRO", Helvetica;
+    --headings-h2-font-size: 32px;
+    --headings-h2-font-style: normal;
+    --headings-h2-font-weight: 400;
+    --headings-h2-letter-spacing: -1px;
+    --headings-h2-line-height: 40px;
+    --headings-h3-font-family: "ADAM.CG PRO", Helvetica;
+    --headings-h3-font-size: 24px;
+    --headings-h3-font-style: normal;
+    --headings-h3-font-weight: 400;
+    --headings-h3-letter-spacing: -1px;
+    --headings-h3-line-height: 32px;
+    --headings-h4-font-family: "ADAM.CG PRO", Helvetica;
+    --headings-h4-font-size: 20px;
+    --headings-h4-font-style: normal;
+    --headings-h4-font-weight: 400;
+    --headings-h4-letter-spacing: -1px;
+    --headings-h4-line-height: 24px;
+}
+
+:root {
+    --animate-spin: spin 1s linear infinite;
+}
+
+.animate-fade-in {
+    animation: fade-in 1s var(--animation-delay, 0s) ease forwards;
+}
+
+.animate-fade-up {
+    animation: fade-up 1s var(--animation-delay, 0s) ease forwards;
+}
+
+.animate-marquee {
+    animation: marquee var(--duration) infinite linear;
+}
+
+.animate-marquee-vertical {
+    animation: marquee-vertical var(--duration) linear infinite;
+}
+
+.animate-shimmer {
+    animation: shimmer 8s infinite;
+}
+
+.animate-spin {
+    animation: var(--animate-spin);
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+@keyframes image-glow {
+    0% {
+        opacity: 0;
+        animation-timing-function: cubic-bezier(0.74, 0.25, 0.76, 1);
+    }
+
+    10% {
+        opacity: 0.7;
+        animation-timing-function: cubic-bezier(0.12, 0.01, 0.08, 0.99);
+    }
+
+    to {
+        opacity: 0.4;
+    }
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes fade-up {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes shimmer {
+
+    0%,
+    90%,
+    to {
+        background-position: calc(-100% - var(--shimmer-width)) 0;
+    }
+
+    30%,
+    60% {
+        background-position: calc(100% + var(--shimmer-width)) 0;
+    }
+}
+
+@keyframes marquee {
+    0% {
+        transform: translate(0);
+    }
+
+    to {
+        transform: translateX(calc(-100% - var(--gap)));
+    }
+}
+
+@keyframes marquee-vertical {
+    0% {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(calc(-100% - var(--gap)));
+    }
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --background: 0 0% 100%;
+        --foreground: 222.2 47.4% 11.2%;
+
+        --muted: 210 40% 96.1%;
+        --muted-foreground: 215.4 16.3% 46.9%;
+
+        --popover: 0 0% 100%;
+        --popover-foreground: 222.2 47.4% 11.2%;
+
+        --border: 214.3 31.8% 91.4%;
+        --input: 214.3 31.8% 91.4%;
+
+        --card: transparent;
+        --card-foreground: 222.2 47.4% 11.2%;
+
+        --primary: 222.2 47.4% 11.2%;
+        --primary-foreground: 210 40% 98%;
+
+        --secondary: 210 40% 96.1%;
+        --secondary-foreground: 222.2 47.4% 11.2%;
+
+        --accent: 210 40% 96.1%;
+        --accent-foreground: 222.2 47.4% 11.2%;
+
+        --destructive: 0 100% 50%;
+        --destructive-foreground: 210 40% 98%;
+
+        --ring: 215 20.2% 65.1%;
+
+        --radius: 0.5rem;
+    }
+
+    .dark {
+        --background: 224 71% 4%;
+        --foreground: 213 31% 91%;
+
+        --muted: 223 47% 11%;
+        --muted-foreground: 215.4 16.3% 56.9%;
+
+        --accent: 216 34% 17%;
+        --accent-foreground: 210 40% 98%;
+
+        --popover: 224 71% 4%;
+        --popover-foreground: 215 20.2% 65.1%;
+
+        --border: 216 34% 17%;
+        --input: 216 34% 17%;
+
+        --card: transparent;
+        --card-foreground: 213 31% 91%;
+
+        --primary: 210 40% 98%;
+        --primary-foreground: 222.2 47.4% 1.2%;
+
+        --secondary: 222.2 47.4% 11.2%;
+        --secondary-foreground: 210 40% 98%;
+
+        --destructive: 0 63% 31%;
+        --destructive-foreground: 210 40% 98%;
+
+        --ring: 216 34% 17%;
+
+        --radius: 0.5rem;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+        font-feature-settings:
+            "rlig" 1,
+            "calt" 1;
+    }
+}html { scroll-behavior: smooth; }

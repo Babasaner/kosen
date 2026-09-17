@@ -1,0 +1,1 @@
+export { ResidencePortfolioSection } from "./ResidencePortfolioSection";
