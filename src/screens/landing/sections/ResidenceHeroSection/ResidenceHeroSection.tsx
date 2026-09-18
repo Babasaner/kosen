@@ -14,12 +14,12 @@ export const ResidenceHeroSection = (): JSX.Element => {
 
     return (
         <section
-            className="relative flex min-h-[900px] w-full flex-col overflow-hidden text-white bg-cover bg-center bg-no-repeat"
+            className="relative flex min-h-[100vh] w-full flex-col overflow-hidden text-white bg-cover bg-center bg-no-repeat"
             style={{ backgroundImage: "linear-gradient(0deg, rgba(46,44,42,0.7) 0%, rgba(46,44,42,0.7) 100%), url('/img/kosen-hero.jpg')" }}
             aria-labelledby="residence-hero-title"
         >
             <header className="w-full bg-transparent backdrop-blur-[2px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(2px)_brightness(100%)] relative z-50">
-                <div className="mx-auto flex min-h-[88px] w-full max-w-[1440px] items-center justify-between px-5 py-[19px] sm:px-10 lg:px-20">
+                <div className="mx-auto flex min-h-[88px] w-full items-center justify-between px-5 py-[19px] sm:px-10 lg:px-20">
                     <Button
                         variant="ghost"
                         className="h-auto shrink-0 rounded-none p-0 hover:bg-transparent"
@@ -113,7 +113,7 @@ export const ResidenceHeroSection = (): JSX.Element => {
                 )}
             </AnimatePresence>
 
-            <div className="mx-auto flex w-full max-w-[1440px] flex-1 px-5 pt-[80px] sm:pt-[136px] sm:px-10 lg:px-20">
+            <div className="mx-auto flex w-full mflex-1 px-5 pt-[80px] sm:pt-[136px] sm:px-10 lg:px-20">
                 <div className="flex w-full max-w-[489px] flex-col items-start gap-6">
                     <motion.h1
                         initial={{ opacity: 0, y: 30 }}

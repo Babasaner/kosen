@@ -14,10 +14,11 @@ import { FadeIn } from "../../components/animations/FadeIn";
 
 export const Landing = (): JSX.Element => {
     return (
-        <main
-            className="relative flex w-full flex-col items-stretch overflow-x-hidden"
-            data-model-id="12107:951"
-        >
+        <div className="min-h-screen bg-[#1a1a1a] flex flex-col items-center w-full">
+            <main
+                className="relative flex w-full max-w-[1920px] bg-white flex-col items-stretch overflow-x-hidden shadow-2xl"
+                data-model-id="12107:951"
+            >
             <ResidenceHeroSection />
             
             <FadeIn delay={0.1}>
@@ -61,6 +62,7 @@ export const Landing = (): JSX.Element => {
             </FadeIn>
             
             <SiteFooterSection />
-        </main>
+            </main>
+        </div>
     );
 };

@@ -25,7 +25,7 @@ export const ResidencePortfolioSection = (): JSX.Element => {
     return (
         <section
             aria-labelledby="komorebi-title"
-            className="flex w-full flex-col items-center gap-10 bg-[#2e2c2a] px-5 py-10 sm:px-10 sm:py-16 lg:px-20 lg:py-20"
+            className="flex w-full  flex-col items-center gap-10 bg-[#2e2c2a] px-5 py-10 sm:px-10 sm:py-16 lg:px-20 lg:py-20"
         >
             <header className="flex w-full max-w-[930px] flex-col items-center gap-6 text-center lg:gap-10">
                 <p className="font-headings-h1 text-[24px] font-[number:var(--headings-h1-font-weight)] leading-[var(--headings-h1-line-height)] tracking-[var(--headings-h1-letter-spacing)] text-[#ac937e] [font-style:var(--headings-h1-font-style)] sm:text-[length:var(--headings-h1-font-size)]">
