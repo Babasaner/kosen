@@ -15,7 +15,7 @@ export const UrbanReforestationSection = (): JSX.Element => {
             <div className="flex w-full flex-col items-center gap-6 sm:gap-10">
                 <h2
                     id="urban-reforestation-title"
-                    className="m-0 max-w-[1266px] uppercase [font-family:'ADAM.CG_PRO-Regular',Helvetica] text-center text-[18px] font-normal leading-[20px] tracking-[0] text-[#e6ded8] sm:text-[52px] sm:leading-[64px] lg:text-[100px] lg:leading-[120px]"
+                    className="m-0 max-w-[1266px] uppercase [font-family:'ADAM.CG_PRO-Regular',Helvetica] text-center text-[64px] font-normal leading-[72px] tracking-[0] text-[#e6ded8] sm:text-[52px] sm:leading-[64px] lg:text-[100px] lg:leading-[120px]"
                 >
                     {titleLines.map((line, index) => (
                         <span key={line}>
@@ -24,13 +24,13 @@ export const UrbanReforestationSection = (): JSX.Element => {
                         </span>
                     ))}
                 </h2>
-                <p className="m-0 flex max-w-[720px] items-center justify-center font-body-regular text-center text-[10px] font-[number:var(--body-regular-font-weight)] leading-[12px] tracking-[var(--body-regular-letter-spacing)] text-white [font-style:var(--body-regular-font-style)] sm:text-[length:var(--body-regular-font-size)] sm:leading-[var(--body-regular-line-height)]">
+                <p className="m-0 flex max-w-[720px] items-center justify-center font-body-regular text-center text-[16px] font-[number:var(--body-regular-font-weight)] leading-[20px] tracking-[var(--body-regular-letter-spacing)] text-white [font-style:var(--body-regular-font-style)] sm:text-[length:var(--body-regular-font-size)] sm:leading-[var(--body-regular-line-height)]">
                     {description}
                 </p>
                 <Button
                     type="button"
                     variant="outline"
-                    className="h-auto rounded-none border-[#ac937e] bg-transparent px-3 py-2 font-button-default text-[8px] font-[number:var(--button-default-font-weight)] leading-[10px] tracking-[var(--button-default-letter-spacing)] text-white shadow-none hover:border-[#ac937e] hover:bg-white/10 hover:text-white focus-visible:ring-[#ac937e] sm:px-6 sm:py-4 sm:text-[length:var(--button-default-font-size)] sm:leading-[var(--button-default-line-height)] [font-style:var(--button-default-font-style)]"
+                    className="h-auto rounded-none border-[#ac937e] bg-transparent px-[24px] py-[16px] font-button-default text-[16px] font-[number:var(--button-default-font-weight)] leading-[16px] tracking-[var(--button-default-letter-spacing)] text-white shadow-none hover:border-[#ac937e] hover:bg-white/10 hover:text-white focus-visible:ring-[#ac937e] sm:px-6 sm:py-4 sm:text-[length:var(--button-default-font-size)] sm:leading-[var(--button-default-line-height)] [font-style:var(--button-default-font-style)]"
                 >
                     COMPRENDRE L&apos;ENGAGEMENT
                 </Button>

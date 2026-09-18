@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { FormEvent } from "react";
 import { Button } from "../../../../components/ui/button";
 import {
     Card,
@@ -20,6 +21,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from "../../../../components/ui/select";
+import { SearchableSelect } from "../../../../components/ui/searchable-select";
+import { CONTACT } from "../../../../lib/site";
 
 const investmentBenefits = [
     {
@@ -46,11 +49,281 @@ const contactChannels = [
     { value: "whatsapp", label: "WhatsApp" },
 ];
 
+const countries = [
+    { value: "afghanistan", label: "Afghanistan", dialCode: "+93" },
+    { value: "afrique-du-sud", label: "Afrique du Sud", dialCode: "+27" },
+    { value: "albanie", label: "Albanie", dialCode: "+355" },
+    { value: "algerie", label: "Algérie", dialCode: "+213" },
+    { value: "allemagne", label: "Allemagne", dialCode: "+49" },
+    { value: "andorre", label: "Andorre", dialCode: "+376" },
+    { value: "angola", label: "Angola", dialCode: "+244" },
+    { value: "antigua-et-barbuda", label: "Antigua-et-Barbuda", dialCode: "+1" },
+    { value: "arabie-saoudite", label: "Arabie saoudite", dialCode: "+966" },
+    { value: "argentine", label: "Argentine", dialCode: "+54" },
+    { value: "armenie", label: "Arménie", dialCode: "+374" },
+    { value: "australie", label: "Australie", dialCode: "+61" },
+    { value: "autriche", label: "Autriche", dialCode: "+43" },
+    { value: "azerbaidjan", label: "Azerbaïdjan", dialCode: "+994" },
+    { value: "bahamas", label: "Bahamas", dialCode: "+1" },
+    { value: "bahrein", label: "Bahreïn", dialCode: "+973" },
+    { value: "bangladesh", label: "Bangladesh", dialCode: "+880" },
+    { value: "barbade", label: "Barbade", dialCode: "+1" },
+    { value: "belgique", label: "Belgique", dialCode: "+32" },
+    { value: "belize", label: "Belize", dialCode: "+501" },
+    { value: "benin", label: "Bénin", dialCode: "+229" },
+    { value: "bhoutan", label: "Bhoutan", dialCode: "+975" },
+    { value: "bielorussie", label: "Biélorussie", dialCode: "+375" },
+    { value: "birmanie", label: "Birmanie (Myanmar)", dialCode: "+95" },
+    { value: "bolivie", label: "Bolivie", dialCode: "+591" },
+    { value: "bosnie-herzegovine", label: "Bosnie-Herzégovine", dialCode: "+387" },
+    { value: "botswana", label: "Botswana", dialCode: "+267" },
+    { value: "bresil", label: "Brésil", dialCode: "+55" },
+    { value: "brunei", label: "Brunei", dialCode: "+673" },
+    { value: "bulgarie", label: "Bulgarie", dialCode: "+359" },
+    { value: "burkina-faso", label: "Burkina Faso", dialCode: "+226" },
+    { value: "burundi", label: "Burundi", dialCode: "+257" },
+    { value: "cambodge", label: "Cambodge", dialCode: "+855" },
+    { value: "cameroun", label: "Cameroun", dialCode: "+237" },
+    { value: "canada", label: "Canada", dialCode: "+1" },
+    { value: "cap-vert", label: "Cap-Vert", dialCode: "+238" },
+    { value: "chili", label: "Chili", dialCode: "+56" },
+    { value: "chine", label: "Chine", dialCode: "+86" },
+    { value: "chypre", label: "Chypre", dialCode: "+357" },
+    { value: "colombie", label: "Colombie", dialCode: "+57" },
+    { value: "comores", label: "Comores", dialCode: "+269" },
+    { value: "congo", label: "Congo (République du)", dialCode: "+242" },
+    { value: "congo-rdc", label: "Congo (République démocratique)", dialCode: "+243" },
+    { value: "coree-du-nord", label: "Corée du Nord", dialCode: "+850" },
+    { value: "coree-du-sud", label: "Corée du Sud", dialCode: "+82" },
+    { value: "costa-rica", label: "Costa Rica", dialCode: "+506" },
+    { value: "cote-d-ivoire", label: "Côte d'Ivoire", dialCode: "+225" },
+    { value: "croatie", label: "Croatie", dialCode: "+385" },
+    { value: "cuba", label: "Cuba", dialCode: "+53" },
+    { value: "danemark", label: "Danemark", dialCode: "+45" },
+    { value: "djibouti", label: "Djibouti", dialCode: "+253" },
+    { value: "dominique", label: "Dominique", dialCode: "+1" },
+    { value: "egypte", label: "Égypte", dialCode: "+20" },
+    { value: "emirats-arabes-unis", label: "Émirats arabes unis", dialCode: "+971" },
+    { value: "equateur", label: "Équateur", dialCode: "+593" },
+    { value: "erythree", label: "Érythrée", dialCode: "+291" },
+    { value: "espagne", label: "Espagne", dialCode: "+34" },
+    { value: "estonie", label: "Estonie", dialCode: "+372" },
+    { value: "eswatini", label: "Eswatini", dialCode: "+268" },
+    { value: "etats-unis", label: "États-Unis", dialCode: "+1" },
+    { value: "ethiopie", label: "Éthiopie", dialCode: "+251" },
+    { value: "fidji", label: "Fidji", dialCode: "+679" },
+    { value: "finlande", label: "Finlande", dialCode: "+358" },
+    { value: "france", label: "France", dialCode: "+33" },
+    { value: "gabon", label: "Gabon", dialCode: "+241" },
+    { value: "gambie", label: "Gambie", dialCode: "+220" },
+    { value: "georgie", label: "Géorgie", dialCode: "+995" },
+    { value: "ghana", label: "Ghana", dialCode: "+233" },
+    { value: "grece", label: "Grèce", dialCode: "+30" },
+    { value: "grenade", label: "Grenade", dialCode: "+1" },
+    { value: "guatemala", label: "Guatemala", dialCode: "+502" },
+    { value: "guinee", label: "Guinée", dialCode: "+224" },
+    { value: "guinee-bissau", label: "Guinée-Bissau", dialCode: "+245" },
+    { value: "guinee-equatoriale", label: "Guinée équatoriale", dialCode: "+240" },
+    { value: "guyana", label: "Guyana", dialCode: "+592" },
+    { value: "haiti", label: "Haïti", dialCode: "+509" },
+    { value: "honduras", label: "Honduras", dialCode: "+504" },
+    { value: "hongrie", label: "Hongrie", dialCode: "+36" },
+    { value: "inde", label: "Inde", dialCode: "+91" },
+    { value: "indonesie", label: "Indonésie", dialCode: "+62" },
+    { value: "irak", label: "Irak", dialCode: "+964" },
+    { value: "iran", label: "Iran", dialCode: "+98" },
+    { value: "irlande", label: "Irlande", dialCode: "+353" },
+    { value: "islande", label: "Islande", dialCode: "+354" },
+    { value: "israel", label: "Israël", dialCode: "+972" },
+    { value: "italie", label: "Italie", dialCode: "+39" },
+    { value: "jamaique", label: "Jamaïque", dialCode: "+1" },
+    { value: "japon", label: "Japon", dialCode: "+81" },
+    { value: "jordanie", label: "Jordanie", dialCode: "+962" },
+    { value: "kazakhstan", label: "Kazakhstan", dialCode: "+7" },
+    { value: "kenya", label: "Kenya", dialCode: "+254" },
+    { value: "kirghizistan", label: "Kirghizistan", dialCode: "+996" },
+    { value: "kiribati", label: "Kiribati", dialCode: "+686" },
+    { value: "kosovo", label: "Kosovo", dialCode: "+383" },
+    { value: "koweit", label: "Koweït", dialCode: "+965" },
+    { value: "laos", label: "Laos", dialCode: "+856" },
+    { value: "lesotho", label: "Lesotho", dialCode: "+266" },
+    { value: "lettonie", label: "Lettonie", dialCode: "+371" },
+    { value: "liban", label: "Liban", dialCode: "+961" },
+    { value: "liberia", label: "Libéria", dialCode: "+231" },
+    { value: "libye", label: "Libye", dialCode: "+218" },
+    { value: "liechtenstein", label: "Liechtenstein", dialCode: "+423" },
+    { value: "lituanie", label: "Lituanie", dialCode: "+370" },
+    { value: "luxembourg", label: "Luxembourg", dialCode: "+352" },
+    { value: "macedoine-du-nord", label: "Macédoine du Nord", dialCode: "+389" },
+    { value: "madagascar", label: "Madagascar", dialCode: "+261" },
+    { value: "malaisie", label: "Malaisie", dialCode: "+60" },
+    { value: "malawi", label: "Malawi", dialCode: "+265" },
+    { value: "maldives", label: "Maldives", dialCode: "+960" },
+    { value: "mali", label: "Mali", dialCode: "+223" },
+    { value: "malte", label: "Malte", dialCode: "+356" },
+    { value: "iles-marshall", label: "Îles Marshall", dialCode: "+692" },
+    { value: "maroc", label: "Maroc", dialCode: "+212" },
+    { value: "maurice", label: "Maurice", dialCode: "+230" },
+    { value: "mauritanie", label: "Mauritanie", dialCode: "+222" },
+    { value: "mexique", label: "Mexique", dialCode: "+52" },
+    { value: "micronesie", label: "Micronésie", dialCode: "+691" },
+    { value: "moldavie", label: "Moldavie", dialCode: "+373" },
+    { value: "monaco", label: "Monaco", dialCode: "+377" },
+    { value: "mongolie", label: "Mongolie", dialCode: "+976" },
+    { value: "montenegro", label: "Monténégro", dialCode: "+382" },
+    { value: "mozambique", label: "Mozambique", dialCode: "+258" },
+    { value: "namibie", label: "Namibie", dialCode: "+264" },
+    { value: "nauru", label: "Nauru", dialCode: "+674" },
+    { value: "nepal", label: "Népal", dialCode: "+977" },
+    { value: "nicaragua", label: "Nicaragua", dialCode: "+505" },
+    { value: "niger", label: "Niger", dialCode: "+227" },
+    { value: "nigeria", label: "Nigeria", dialCode: "+234" },
+    { value: "norvege", label: "Norvège", dialCode: "+47" },
+    { value: "nouvelle-zelande", label: "Nouvelle-Zélande", dialCode: "+64" },
+    { value: "oman", label: "Oman", dialCode: "+968" },
+    { value: "ouganda", label: "Ouganda", dialCode: "+256" },
+    { value: "ouzbekistan", label: "Ouzbékistan", dialCode: "+998" },
+    { value: "pakistan", label: "Pakistan", dialCode: "+92" },
+    { value: "palaos", label: "Palaos", dialCode: "+680" },
+    { value: "palestine", label: "Palestine", dialCode: "+970" },
+    { value: "panama", label: "Panama", dialCode: "+507" },
+    { value: "papouasie-nouvelle-guinee", label: "Papouasie-Nouvelle-Guinée", dialCode: "+675" },
+    { value: "paraguay", label: "Paraguay", dialCode: "+595" },
+    { value: "pays-bas", label: "Pays-Bas", dialCode: "+31" },
+    { value: "perou", label: "Pérou", dialCode: "+51" },
+    { value: "philippines", label: "Philippines", dialCode: "+63" },
+    { value: "pologne", label: "Pologne", dialCode: "+48" },
+    { value: "portugal", label: "Portugal", dialCode: "+351" },
+    { value: "qatar", label: "Qatar", dialCode: "+974" },
+    { value: "republique-centrafricaine", label: "République centrafricaine", dialCode: "+236" },
+    { value: "republique-dominicaine", label: "République dominicaine", dialCode: "+1" },
+    { value: "republique-tcheque", label: "République tchèque", dialCode: "+420" },
+    { value: "roumanie", label: "Roumanie", dialCode: "+40" },
+    { value: "royaume-uni", label: "Royaume-Uni", dialCode: "+44" },
+    { value: "russie", label: "Russie", dialCode: "+7" },
+    { value: "rwanda", label: "Rwanda", dialCode: "+250" },
+    { value: "saint-kitts-et-nevis", label: "Saint-Kitts-et-Nevis", dialCode: "+1" },
+    { value: "saint-marin", label: "Saint-Marin", dialCode: "+378" },
+    { value: "saint-vincent-grenadines", label: "Saint-Vincent-et-les-Grenadines", dialCode: "+1" },
+    { value: "sainte-lucie", label: "Sainte-Lucie", dialCode: "+1" },
+    { value: "salvador", label: "Salvador", dialCode: "+503" },
+    { value: "samoa", label: "Samoa", dialCode: "+685" },
+    { value: "sao-tome-et-principe", label: "Sao Tomé-et-Principe", dialCode: "+239" },
+    { value: "senegal", label: "Sénégal", dialCode: "+221" },
+    { value: "serbie", label: "Serbie", dialCode: "+381" },
+    { value: "seychelles", label: "Seychelles", dialCode: "+248" },
+    { value: "sierra-leone", label: "Sierra Leone", dialCode: "+232" },
+    { value: "singapour", label: "Singapour", dialCode: "+65" },
+    { value: "slovaquie", label: "Slovaquie", dialCode: "+421" },
+    { value: "slovenie", label: "Slovénie", dialCode: "+386" },
+    { value: "somalie", label: "Somalie", dialCode: "+252" },
+    { value: "soudan", label: "Soudan", dialCode: "+249" },
+    { value: "soudan-du-sud", label: "Soudan du Sud", dialCode: "+211" },
+    { value: "sri-lanka", label: "Sri Lanka", dialCode: "+94" },
+    { value: "suede", label: "Suède", dialCode: "+46" },
+    { value: "suisse", label: "Suisse", dialCode: "+41" },
+    { value: "suriname", label: "Suriname", dialCode: "+597" },
+    { value: "syrie", label: "Syrie", dialCode: "+963" },
+    { value: "tadjikistan", label: "Tadjikistan", dialCode: "+992" },
+    { value: "tanzanie", label: "Tanzanie", dialCode: "+255" },
+    { value: "tchad", label: "Tchad", dialCode: "+235" },
+    { value: "thailande", label: "Thaïlande", dialCode: "+66" },
+    { value: "timor-oriental", label: "Timor oriental", dialCode: "+670" },
+    { value: "togo", label: "Togo", dialCode: "+228" },
+    { value: "tonga", label: "Tonga", dialCode: "+676" },
+    { value: "trinite-et-tobago", label: "Trinité-et-Tobago", dialCode: "+1" },
+    { value: "tunisie", label: "Tunisie", dialCode: "+216" },
+    { value: "turkmenistan", label: "Turkménistan", dialCode: "+993" },
+    { value: "turquie", label: "Turquie", dialCode: "+90" },
+    { value: "tuvalu", label: "Tuvalu", dialCode: "+688" },
+    { value: "ukraine", label: "Ukraine", dialCode: "+380" },
+    { value: "uruguay", label: "Uruguay", dialCode: "+598" },
+    { value: "vanuatu", label: "Vanuatu", dialCode: "+678" },
+    { value: "vatican", label: "Vatican", dialCode: "+39" },
+    { value: "venezuela", label: "Venezuela", dialCode: "+58" },
+    { value: "vietnam", label: "Vietnam", dialCode: "+84" },
+    { value: "yemen", label: "Yémen", dialCode: "+967" },
+    { value: "zambie", label: "Zambie", dialCode: "+260" },
+    { value: "zimbabwe", label: "Zimbabwe", dialCode: "+263" },
+    { value: "autre", label: "Autre pays", dialCode: "" },
+];
+
+const projectOptions = [
+    { value: "kosen-one", label: "KŌSEN One" },
+    { value: "kosen-two", label: "KŌSEN Two" },
+    { value: "komorebi-one", label: "KŌMOREBI One" },
+    { value: "business-center", label: "KŌSEN Business Center" },
+    { value: "micro-quartier", label: "Le micro-quartier KŌSEN" },
+    { value: "indecis", label: "Je ne sais pas encore" },
+];
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export const InvestmentInquirySection = (): JSX.Element => {
+    const [country, setCountry] = useState("");
+    const [language, setLanguage] = useState("francais");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [property, setProperty] = useState("");
     const [contactChannel, setContactChannel] = useState("email");
+    const [consent, setConsent] = useState(false);
+    const [error, setError] = useState("");
+
+    const dialCode = countries.find((item) => item.value === country)?.dialCode ?? "";
+    const countryLabel = countries.find((item) => item.value === country)?.label ?? country;
+    const propertyLabel =
+        projectOptions.find((item) => item.value === property)?.label ?? property;
+
+    const buildLeadMessage = (): string => {
+        const lines = [
+            `Pays de résidence : ${countryLabel}`,
+            `Langue préférée : ${language}`,
+            `E-mail : ${email}`,
+            phone ? `Téléphone / WhatsApp : ${dialCode} ${phone}` : "",
+            `Bien recherché : ${propertyLabel}`,
+            `Canal de contact préféré : ${contactChannel}`,
+        ].filter(Boolean);
+        return encodeURIComponent(lines.join("\n"));
+    };
+
+    const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+        event.preventDefault();
+        setError("");
+        if (!EMAIL_PATTERN.test(email)) {
+            setError("Merci de renseigner un e-mail valide pour être recontacté.");
+            return;
+        }
+        const phoneDigits = phone.replace(/\D/g, "");
+        if (phoneDigits.length < 4) {
+            setError("Merci d'indiquer un numéro de téléphone pour que l'on puisse vous joindre.");
+            return;
+        }
+        if (!property) {
+            setError("Merci de choisir le bien qui vous intéresse.");
+            return;
+        }
+        if (!consent) {
+            setError("Merci d'accepter d'être recontacté par KŌSEN.");
+            return;
+        }
+        const message = buildLeadMessage();
+        const subject = encodeURIComponent("Demande conseiller diaspora — KŌSEN");
+        if (contactChannel === "whatsapp") {
+            window.open(`https://wa.me/${(dialCode + phone).replace(/\D/g, "")}?text=${message}`, "_blank", "noopener,noreferrer");
+        } else {
+            window.location.href = `mailto:${CONTACT.email}?subject=${subject}&body=${message}`;
+        }
+    };
+
+    const openWhatsApp = (): void => {
+        const message = encodeURIComponent(
+            "Bonjour KŌSEN, j'aimerais échanger à propos d'un projet immobilier à Dakar."
+        );
+        window.open(`https://wa.me/${CONTACT.whatsappNumber}?text=${message}`, "_blank", "noopener,noreferrer");
+    };
 
     return (
-        <section className="w-full bg-white px-5 py-10 lg:py-0 sm:px-10   lg:px-20 ">
+        <section id="diaspora" className="w-full scroll-mt-24 bg-white px-5 py-10 lg:py-0 sm:px-10   lg:px-20 ">
             <div className="mx-auto grid w-full grid-cols-1 gap-10 lg:grid-cols-[minmax(0,520px)_minmax(0,1fr)_minmax(0,518.64px)] lg:gap-0">
                 <div className="flex flex-col items-start justify-center gap-6 lg:col-start-1 lg:row-start-1 lg:self-center">
                     <p className="font-caption-regular text-center md:text-left text-[length:var(--caption-regular-font-size)] font-[number:var(--caption-regular-font-weight)] leading-[var(--caption-regular-line-height)] tracking-[var(--caption-regular-letter-spacing)] text-[#ac937e] [font-style:var(--caption-regular-font-style)]">
@@ -98,7 +371,8 @@ export const InvestmentInquirySection = (): JSX.Element => {
                     <CardContent className="p-8 pt-6">
                         <form
                             className="flex flex-col"
-                            onSubmit={(event) => event.preventDefault()}
+                            onSubmit={handleSubmit}
+                            noValidate
                         >
                             <div className="space-y-4">
                                 <div className="flex flex-col gap-2">
@@ -109,10 +383,18 @@ export const InvestmentInquirySection = (): JSX.Element => {
                                         PAYS DE RÉSIDENCE
                                     </Label>
 
-
-                                    <Input
+                                    <SearchableSelect
                                         id="country"
-                                        className="h-11 rounded-none border-0 border-b border-[#ac937e] bg-transparent px-0 shadow-none focus-visible:ring-0"
+                                        value={country}
+                                        placeholder="Recherchez votre pays"
+                                        searchPlaceholder="Rechercher un pays…"
+                                        emptyText="Aucun pays trouvé."
+                                        options={countries}
+                                        triggerClassName="font-body-regular text-[length:var(--body-regular-font-size)] font-[number:var(--body-regular-font-weight)] leading-[var(--body-regular-line-height)] tracking-[var(--body-regular-letter-spacing)] text-[#6d6b6a] [font-style:var(--body-regular-font-style)]"
+                                        onValueChange={(value) => {
+                                            setCountry(value);
+                                            setPhone("");
+                                        }}
                                     />
                                 </div>
 
@@ -124,7 +406,7 @@ export const InvestmentInquirySection = (): JSX.Element => {
                                         LANGUE PRÉFÉRÉE
                                     </Label>
 
-                                    <Select defaultValue="francais-english">
+                                    <Select value={language} onValueChange={setLanguage}>
                                         <SelectTrigger
                                             id="language"
                                             className="h-11 rounded-none border-0 border-b border-[#ac937e] bg-transparent px-0 font-body-regular text-[length:var(--body-regular-font-size)] font-[number:var(--body-regular-font-weight)] leading-[var(--body-regular-line-height)] tracking-[var(--body-regular-letter-spacing)] text-[#6d6b6a] shadow-none focus:ring-0 [font-style:var(--body-regular-font-style)]"
@@ -160,8 +442,43 @@ export const InvestmentInquirySection = (): JSX.Element => {
                                     <Input
                                         id="email"
                                         type="email"
+                                        value={email}
+                                        onChange={(event) => setEmail(event.target.value)}
                                         className="h-11 rounded-none border-0 border-b border-[#ac937e] bg-transparent px-0 shadow-none focus-visible:ring-0"
                                     />
+                                </div>
+
+                                <div className="flex flex-col gap-2">
+                                    <Label
+                                        htmlFor="phone"
+                                        className="font-caption-regular text-[length:var(--caption-regular-font-size)] font-[number:var(--caption-regular-font-weight)] leading-[var(--caption-regular-line-height)] tracking-[var(--caption-regular-letter-spacing)] text-[#2e2c2a] [font-style:var(--caption-regular-font-style)]"
+                                    >
+                                        TÉLÉPHONE / WHATSAPP *
+                                    </Label>
+
+                                    <div className="flex items-center border-b border-[#ac937e]">
+                                        {dialCode && (
+                                            <span className="shrink-0 font-body-regular text-[length:var(--body-regular-font-size)] font-[number:var(--body-regular-font-weight)] leading-[var(--body-regular-line-height)] tracking-[var(--body-regular-letter-spacing)] text-[#6d6b6a] [font-style:var(--body-regular-font-style)]">
+                                                {dialCode}
+                                            </span>
+                                        )}
+                                        <Input
+                                            id="phone"
+                                            type="tel"
+                                            inputMode="tel"
+                                            value={phone}
+                                            onChange={(event) => setPhone(event.target.value)}
+                                            placeholder={
+                                                dialCode
+                                                    ? "Numéro de téléphone"
+                                                    : "Ex : 78 797 89 89"
+                                            }
+                                            className="h-11 flex-1 rounded-none border-0 bg-transparent px-0 shadow-none focus-visible:ring-0"
+                                        />
+                                    </div>
+                                    <span className="[font-family:'Gelion-Regular',Helvetica] text-[11.4px] font-normal leading-[17px] text-[#6d6b6a]">
+                                        L&apos;indicatif s&apos;ajoute automatiquement selon votre pays de résidence.
+                                    </span>
                                 </div>
 
                                 <div className="flex flex-col gap-2">
@@ -172,18 +489,20 @@ export const InvestmentInquirySection = (): JSX.Element => {
                                         BIEN RECHERCHÉ
                                     </Label>
 
-                                    <Select defaultValue="komorebi-one-kosen-two">
+                                    <Select value={property} onValueChange={setProperty}>
                                         <SelectTrigger
                                             id="property"
                                             className="h-11 rounded-none border-0 border-b border-[#ac937e] bg-transparent px-0 font-body-regular text-[length:var(--body-regular-font-size)] font-[number:var(--body-regular-font-weight)] leading-[var(--body-regular-line-height)] tracking-[var(--body-regular-letter-spacing)] text-[#6d6b6a] shadow-none focus:ring-0 [font-style:var(--body-regular-font-style)]"
                                         >
-                                            <SelectValue />
+                                            <SelectValue placeholder="Choisissez votre projet" />
                                         </SelectTrigger>
 
                                         <SelectContent>
-                                            <SelectItem value="komorebi-one-kosen-two">
-                                                KŌMOREBI One, KŌSEN Two…
-                                            </SelectItem>
+                                            {projectOptions.map((item) => (
+                                                <SelectItem key={item.value} value={item.value}>
+                                                    {item.label}
+                                                </SelectItem>
+                                            ))}
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -224,6 +543,8 @@ export const InvestmentInquirySection = (): JSX.Element => {
                             <div className="mt-4 flex items-start gap-3">
                                 <Checkbox
                                     id="consent"
+                                    checked={consent}
+                                    onCheckedChange={(checked) => setConsent(checked === true)}
                                     className="mt-0.5 h-4 w-4 rounded-none border-[#2e2c2a] data-[state=checked]:bg-[#2e2c2a]"
                                 />
 
@@ -245,12 +566,22 @@ export const InvestmentInquirySection = (): JSX.Element => {
 
                                 <Button
                                     type="button"
+                                    onClick={openWhatsApp}
                                     variant="outline"
                                     className="h-11 w-full rounded-none border-[#2e2c2a] bg-transparent px-6 font-button-default text-[length:var(--button-default-font-size)] font-[number:var(--button-default-font-weight)] leading-[var(--button-default-line-height)] tracking-[var(--button-default-letter-spacing)] text-[#2e2c2a] hover:bg-transparent hover:text-[#2e2c2a] [font-style:var(--button-default-font-style)]"
                                 >
                                     ÉCHANGER SUR WHATSAPP
                                 </Button>
                             </div>
+
+                            {error && (
+                                <p
+                                    role="alert"
+                                    className="mt-4 [font-family:'Gelion-Regular',Helvetica] text-[12.2px] font-normal leading-[18.2px] text-[#a9442f]"
+                                >
+                                    {error}
+                                </p>
+                            )}
 
                             <p className="mt-4 [font-family:'Gelion-Regular',Helvetica] text-[12.2px] font-normal leading-[18.2px] text-[#2e2c2a]">
                                 Sans engagement. Vos informations restent confidentielles.

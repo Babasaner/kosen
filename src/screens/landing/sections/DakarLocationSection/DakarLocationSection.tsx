@@ -54,13 +54,7 @@ const mapLocations = [
         left: "40%",
         color: "bg-[#ac937e]",
     },
-    {
-        id: "FERRIES ÎLE DE GORÉE",
-        label: "Ferries",
-        top: "70%",
-        left: "75%",
-        color: "bg-[#ac937e]",
-    }
+
 ];
 
 const nearbyPlaces = [
@@ -74,6 +68,7 @@ const nearbyPlaces = [
     "MUSÉE DES CIVILISATIONS NOIRES",
     "AVENUE FAIDHERBE",
     "FERRIES ÎLE DE GORÉE",
+
 ];
 
 export const DakarLocationSection = (): JSX.Element => {
@@ -82,7 +77,7 @@ export const DakarLocationSection = (): JSX.Element => {
     return (
         <section
             id="dakar"
-            className="flex w-full flex-col items-center justify-center bg-[#c2c8ca] gap-2.5 pr-0 lg:pr-20"
+            className="flex scroll-mt-24 w-full flex-col items-center justify-center bg-[#c2c8ca] gap-2.5 pr-0 lg:pr-20"
             aria-labelledby="dakar-location-heading"
         >
             <div className="flex w-full flex-col items-center justify-between gap-10 lg:flex-row lg:gap-12">
@@ -100,7 +95,7 @@ export const DakarLocationSection = (): JSX.Element => {
                         <AnimatePresence>
                             {mapLocations.map((location) => {
                                 const isActive = selectedPlace === location.id;
-                                
+
                                 return (
                                     <motion.li
                                         key={location.id}

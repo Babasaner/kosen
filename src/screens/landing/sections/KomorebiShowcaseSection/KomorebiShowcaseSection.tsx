@@ -26,7 +26,7 @@ export const KomorebiShowcaseSection = (): JSX.Element => {
     return (
         <section
             id="residences"
-            className="flex h-[900px] w-full self-stretch overflow-hidden bg-[#2e2c2a] flex-col lg:flex-row"
+            className="flex h-[900px]  w-full self-stretch overflow-hidden bg-[#2e2c2a] flex-col lg:flex-row scroll-mt-24"
             aria-label="Nos résidences"
         >
             {showcaseProperties.map((property) => (

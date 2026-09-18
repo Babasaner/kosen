@@ -2,8 +2,13 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "../../../../components/ui/button";
 import { Card, CardContent } from "../../../../components/ui/card";
+import {
+    ANCHORS,
+    RESIDENCE_LINKS,
+    smoothScrollTo,
+} from "../../../../lib/site";
 
-type Status = "ACHEVÉ" | "EN COURS" | "PROCHAINEMENT";
+type Status = "ACHEVÉ" | "EN COURS" | "PROCHAINEMENT" | "";
 
 interface MasterplanItem {
     key: string;
@@ -11,10 +16,20 @@ interface MasterplanItem {
     status: Status;
     description: string;
     image: string;
+    link?: string;
     upcoming?: boolean;
 }
 
 const masterplanData: MasterplanItem[] = [
+    {
+        key: "kosen-ensemble",
+        label: "KŌSEN",
+        status: "",
+        description:
+            "Une résidence fondatrice du micro-quartier, ouverte sur la ville et les espaces paysagers. Toutes les unités ont été livrées.",
+        image: "/img/Photo-densemble-web.jpg",
+        link: ANCHORS.residences,
+    },
     {
         key: "kosen-one",
         label: "KŌSEN One",
@@ -22,22 +37,25 @@ const masterplanData: MasterplanItem[] = [
         description:
             "Une résidence fondatrice du micro-quartier, ouverte sur la ville et les espaces paysagers. Toutes les unités ont été livrées.",
         image: "/img/kosen-one.jpg",
+        link: RESIDENCE_LINKS.kosenOne,
     },
     {
         key: "kosen-two",
         label: "KŌSEN Two",
         status: "ACHEVÉ",
         description:
-            "La deuxième phase du projet KŌSEN, en pleine construction. Des appartements premium disponibles sur plan en VEFA.",
+            "Une résidence fondatrice du micro-quartier, ouverte sur la ville et les espaces paysagers. Toutes les unités ont été livrées.",
         image: "/img/kosen-two.jpg",
+        link: RESIDENCE_LINKS.kosenTwo,
     },
     {
         key: "komorebi-one",
         label: "KŌMOREBI One",
         status: "EN COURS",
         description:
-            "Un programme résidentiel haut de gamme intégrant des espaces végétalisés et une architecture bioclimatique pensée pour Dakar.",
+            "Une résidence fondatrice du micro-quartier, ouverte sur la ville et les espaces paysagers. Toutes les unités ont été livrées.",
         image: "/img/komorebione.png",
+        link: RESIDENCE_LINKS.komorebiOne,
     },
     {
         key: "business-center",
@@ -46,6 +64,7 @@ const masterplanData: MasterplanItem[] = [
         description:
             "Un espace de bureau et de coworking premium au cœur du micro-quartier KŌSEN. Lancement prévu prochainement.",
         image: "/img/Photo-densemble-web.jpg",
+        link: ANCHORS.diaspora,
         upcoming: true,
     },
 ];
@@ -54,6 +73,7 @@ const statusColors: Record<Status, string> = {
     "ACHEVÉ": "border-[#ac937e] text-[#ac937e]",
     "EN COURS": "border-[#ac937e] text-[#ac937e]",
     "PROCHAINEMENT": "border-[#ac937e] text-[#ac937e]",
+    "": "",
 };
 
 export const NeighborhoodMasterplanSection = (): JSX.Element => {
@@ -65,7 +85,7 @@ export const NeighborhoodMasterplanSection = (): JSX.Element => {
     const [isUpcomingOpen, setIsUpcomingOpen] = useState(false);
 
     return (
-        <section className="w-full self-stretch bg-[#e6ded8] px-5 py-16 sm:px-10 lg:px-20 lg:py-[120px]">
+        <section id="plan-de-masse" className="w-full scroll-mt-24 self-stretch bg-[#e6ded8] px-5 py-16 sm:px-10 lg:px-20 lg:py-[120px]">
             <div className="flex w-full flex-col gap-10">
                 <header className="flex items-center">
                     <div className="flex max-w-[589px] flex-col items-start gap-[22px]">
@@ -79,22 +99,25 @@ export const NeighborhoodMasterplanSection = (): JSX.Element => {
                 </header>
 
                 <Card className="overflow-hidden rounded-none border-[#ac937e] bg-transparent shadow-none">
-                    <CardContent className="grid min-h-[606px] p-0 lg:grid-cols-[307px_minmax(0,1fr)]">
+                    <CardContent className="grid min-h-[606px] grid-cols-1 p-0 lg:grid-cols-[307px_minmax(0,1fr)]">
 
                         {/* ===== SIDEBAR GAUCHE ===== */}
-                        <aside className="flex flex-col items-start gap-4 bg-[#e6ded8] p-6">
-                            {/* Statut badge */}
+                        <aside className="order-2 lg:order-1 flex flex-col items-start gap-4 bg-[#e6ded8] p-6 ">
+
+                            {/* Statut badge (masqué si statut vide) */}
                             <AnimatePresence mode="wait">
-                                <motion.span
-                                    key={`badge-${selectedKey}`}
-                                    initial={{ opacity: 0, y: -6 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: 6 }}
-                                    transition={{ duration: 0.3 }}
-                                    className={`inline-flex items-center justify-center border px-4 py-2 font-caption-regular text-[length:var(--caption-regular-font-size)] font-[number:var(--caption-regular-font-weight)] leading-[var(--caption-regular-line-height)] tracking-[var(--caption-regular-letter-spacing)] [font-style:var(--caption-regular-font-style)] ${statusColors[selected.status]}`}
-                                >
-                                    {selected.status}
-                                </motion.span>
+                                {selected.status && (
+                                    <motion.span
+                                        key={`badge-${selectedKey}`}
+                                        initial={{ opacity: 0, y: -6 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: 6 }}
+                                        transition={{ duration: 0.3 }}
+                                        className={`inline-flex items-center justify-center border px-4 py-2 font-caption-regular text-[length:var(--caption-regular-font-size)] font-[number:var(--caption-regular-font-weight)] leading-[var(--caption-regular-line-height)] tracking-[var(--caption-regular-letter-spacing)] [font-style:var(--caption-regular-font-style)] ${statusColors[selected.status]}`}
+                                    >
+                                        {selected.status}
+                                    </motion.span>
+                                )}
                             </AnimatePresence>
 
                             {/* Titre */}
@@ -137,24 +160,48 @@ export const NeighborhoodMasterplanSection = (): JSX.Element => {
                                 >
                                     {selected.status !== "PROCHAINEMENT" ? (
                                         <>
-                                            <Button className="h-auto w-full rounded-none bg-[#2e2c2a] px-6 py-4 font-button-small text-[length:var(--button-small-font-size)] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] text-[#eee9e5] hover:bg-[#2e2c2a]/90 [font-style:var(--button-small-font-style)]">
-                                                DÉCOUVRIR
+                                            <Button
+                                                asChild
+                                                className="h-auto w-full rounded-none bg-[#2e2c2a] px-6 py-4 font-button-small text-[length:var(--button-small-font-size)] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] text-[#eee9e5] hover:bg-[#2e2c2a]/90 [font-style:var(--button-small-font-style)]"
+                                            >
+                                                <a href={selected.link ?? ANCHORS.residences}>
+                                                    DÉCOUVRIR
+                                                </a>
                                             </Button>
+
                                             {selected.status === "EN COURS" && (
                                                 <Button
+                                                    asChild
                                                     variant="outline"
                                                     className="h-auto rounded-none border-[#ac937e] bg-transparent px-6 py-4 font-button-small text-[length:var(--button-small-font-size)] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] text-[#2e2c2a] hover:bg-[#ac937e]/10 hover:text-[#2e2c2a] [font-style:var(--button-small-font-style)]"
                                                 >
-                                                    DEMANDER LES DISPONIBILITÉS
+                                                    <a
+                                                        href={ANCHORS.diaspora}
+                                                        onClick={(event) => {
+                                                            event.preventDefault();
+                                                            smoothScrollTo(ANCHORS.diaspora);
+                                                        }}
+                                                    >
+                                                        DEMANDER LES DISPONIBILITÉS
+                                                    </a>
                                                 </Button>
                                             )}
                                         </>
                                     ) : (
                                         <Button
+                                            asChild
                                             variant="outline"
                                             className="h-auto rounded-none border-[#9999aa] bg-transparent px-6 py-4 font-button-small text-[length:var(--button-small-font-size)] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] text-[#2e2c2a] hover:bg-[#9999aa]/10 [font-style:var(--button-small-font-style)]"
                                         >
-                                            ÊTRE NOTIFIÉ DU LANCEMENT
+                                            <a
+                                                href={ANCHORS.diaspora}
+                                                onClick={(event) => {
+                                                    event.preventDefault();
+                                                    smoothScrollTo(ANCHORS.diaspora);
+                                                }}
+                                            >
+                                                ÊTRE NOTIFIÉ DU LANCEMENT
+                                            </a>
                                         </Button>
                                     )}
                                 </motion.div>
@@ -172,24 +219,32 @@ export const NeighborhoodMasterplanSection = (): JSX.Element => {
                                         type="button"
                                         onClick={() => setSelectedKey(item.key)}
                                         aria-pressed={selectedKey === item.key}
-                                        className={`relative h-auto w-full text-left border-b border-[#eee9e5] px-0 py-3.5 font-body-regular text-[length:var(--body-regular-font-size)] font-[number:var(--body-regular-font-weight)] leading-[var(--body-regular-line-height)] tracking-[var(--body-regular-letter-spacing)] transition-all duration-200 [font-style:var(--body-regular-font-style)] flex items-center justify-between group ${
-                                            selectedKey === item.key
-                                                ? "text-[#ac937e] font-bold"
-                                                : "text-[#2e2c2a] hover:text-[#ac937e]"
-                                        }`}
+                                        className={`relative flex h-auto w-full items-center justify-between border-b border-[#eee9e5] px-0 py-3.5 text-left font-body-regular text-[length:var(--body-regular-font-size)] font-[number:var(--body-regular-font-weight)] leading-[var(--body-regular-line-height)] tracking-[var(--body-regular-letter-spacing)] transition-all duration-200 [font-style:var(--body-regular-font-style)] group ${selectedKey === item.key
+                                            ? "font-bold text-[#ac937e]"
+                                            : "text-[#2e2c2a] hover:text-[#ac937e]"
+                                            }`}
                                     >
                                         {/* Indicateur actif */}
                                         {selectedKey === item.key && (
                                             <motion.span
                                                 layoutId="activeTab"
-                                                className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#ac937e]"
+                                                className="absolute bottom-0 left-0 top-0 w-[3px] bg-[#ac937e]"
                                                 style={{ originY: 0.5 }}
                                             />
                                         )}
+
                                         <span className="pl-4">{item.label}</span>
-                                        <span className={`text-[11px] tracking-[1px] transition-opacity ${selectedKey === item.key ? "opacity-100" : "opacity-0 group-hover:opacity-50"}`}>
-                                            {item.status}
-                                        </span>
+
+                                        {item.status && (
+                                            <span
+                                                className={`text-[11px] tracking-[1px] transition-opacity ${selectedKey === item.key
+                                                    ? "opacity-100"
+                                                    : "opacity-0 group-hover:opacity-50"
+                                                    }`}
+                                            >
+                                                {item.status}
+                                            </span>
+                                        )}
                                     </button>
                                 ))}
 
@@ -198,10 +253,12 @@ export const NeighborhoodMasterplanSection = (): JSX.Element => {
                                     type="button"
                                     onClick={() => setIsUpcomingOpen((v) => !v)}
                                     aria-expanded={isUpcomingOpen}
-                                    className="h-auto w-full flex justify-between items-center border-b border-[#eee9e5] px-0 py-3.5 font-body-regular text-[length:var(--body-regular-font-size)] font-[number:var(--body-regular-font-weight)] leading-[var(--body-regular-line-height)] tracking-[var(--body-regular-letter-spacing)] text-[#2e2c2a] hover:text-[#ac937e] transition-colors [font-style:var(--body-regular-font-style)]"
+                                    className="flex h-auto w-full items-center justify-between border-b border-[#eee9e5] px-0 py-3.5 font-body-regular text-[length:var(--body-regular-font-size)] font-[number:var(--body-regular-font-weight)] leading-[var(--body-regular-line-height)] tracking-[var(--body-regular-letter-spacing)] text-[#2e2c2a] transition-colors hover:text-[#ac937e] [font-style:var(--body-regular-font-style)]"
                                 >
                                     <span>Prochaines phases</span>
-                                    <span aria-hidden="true">{isUpcomingOpen ? "−" : "+"}</span>
+                                    <span aria-hidden="true">
+                                        {isUpcomingOpen ? "−" : "+"}
+                                    </span>
                                 </button>
 
                                 <AnimatePresence>
@@ -218,14 +275,16 @@ export const NeighborhoodMasterplanSection = (): JSX.Element => {
                                                     type="button"
                                                     onClick={() => setSelectedKey(item.key)}
                                                     aria-pressed={selectedKey === item.key}
-                                                    className={`relative h-auto w-full text-left border-b border-[#eee9e5] px-0 py-3.5 font-body-regular text-[length:var(--body-regular-font-size)] opacity-70 transition-all flex items-center justify-between pl-4 ${
-                                                        selectedKey === item.key
-                                                            ? "text-[#ac937e] opacity-100"
-                                                            : "text-[#2e2c2a] hover:text-[#ac937e]"
-                                                    }`}
+                                                    className={`relative flex h-auto w-full items-center justify-between border-b border-[#eee9e5] px-0 py-3.5 pl-4 text-left font-body-regular text-[length:var(--body-regular-font-size)] opacity-70 transition-all ${selectedKey === item.key
+                                                        ? "text-[#ac937e] opacity-100"
+                                                        : "text-[#2e2c2a] hover:text-[#ac937e]"
+                                                        }`}
                                                 >
                                                     {item.label}
-                                                    <span className="text-[10px] tracking-[1px] text-[#9999aa]">PROCHAINEMENT</span>
+
+                                                    <span className="text-[10px] tracking-[1px] text-[#9999aa]">
+                                                        PROCHAINEMENT
+                                                    </span>
                                                 </button>
                                             ))}
                                         </motion.div>
@@ -235,14 +294,17 @@ export const NeighborhoodMasterplanSection = (): JSX.Element => {
                         </aside>
 
                         {/* ===== IMAGE DROITE avec fade entre les changements ===== */}
-                        <div className="relative h-[420px] lg:h-auto overflow-hidden">
+                        <div className="relative order-1 h-[420px] overflow-hidden lg:order-2 lg:h-auto">
                             <AnimatePresence mode="wait">
                                 <motion.div
                                     key={`img-${selectedKey}`}
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                                    transition={{
+                                        duration: 0.5,
+                                        ease: "easeInOut",
+                                    }}
                                     className="absolute inset-0 bg-cover bg-center"
                                     style={{
                                         backgroundImage: `url('${selected.image}')`,
@@ -253,7 +315,7 @@ export const NeighborhoodMasterplanSection = (): JSX.Element => {
                             </AnimatePresence>
 
                             {/* Overlay gradient bas */}
-                            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
+                            <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/30 to-transparent" />
 
                             {/* Label flottant */}
                             <AnimatePresence mode="wait">
@@ -262,10 +324,13 @@ export const NeighborhoodMasterplanSection = (): JSX.Element => {
                                     initial={{ opacity: 0, y: 12 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -6 }}
-                                    transition={{ duration: 0.4, delay: 0.15 }}
+                                    transition={{
+                                        duration: 0.4,
+                                        delay: 0.15,
+                                    }}
                                     className="absolute bottom-5 left-5"
                                 >
-                                    <span className="font-headings-h4 text-white text-[length:var(--headings-h4-font-size)] tracking-[var(--headings-h4-letter-spacing)]">
+                                    <span className="font-headings-h4 text-[length:var(--headings-h4-font-size)] tracking-[var(--headings-h4-letter-spacing)] text-white">
                                         {selected.label}
                                     </span>
                                 </motion.div>

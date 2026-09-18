@@ -1,3 +1,5 @@
+import { useRef } from "react";
+import type { MouseEvent as ReactMouseEvent, PointerEvent as ReactPointerEvent } from "react";
 import { Button } from "../../../../components/ui/button";
 
 const investmentSteps = [
@@ -59,8 +61,54 @@ const actionButtons = [
 ];
 
 export const InvestmentBenefitsSection = (): JSX.Element => {
+    const stepsRef = useRef<HTMLOListElement | null>(null);
+    const dragState = useRef({
+        active: false,
+        startX: 0,
+        startScroll: 0,
+        moved: false,
+    });
+
+    const handlePointerDown = (e: ReactPointerEvent<HTMLOListElement>): void => {
+        if (e.pointerType !== "mouse") return;
+        const el = stepsRef.current;
+        if (!el) return;
+        try {
+            e.currentTarget.setPointerCapture(e.pointerId);
+        } catch {
+            // ignore capture errors
+        }
+        e.preventDefault();
+        dragState.current = {
+            active: true,
+            startX: e.clientX,
+            startScroll: el.scrollLeft,
+            moved: false,
+        };
+    };
+
+    const handlePointerMove = (e: ReactPointerEvent<HTMLOListElement>): void => {
+        const { active, startX, startScroll } = dragState.current;
+        const el = stepsRef.current;
+        if (!active || !el) return;
+        const dx = e.clientX - startX;
+        if (Math.abs(dx) > 5) dragState.current.moved = true;
+        el.scrollLeft = startScroll - dx;
+    };
+
+    const handlePointerUp = (): void => {
+        dragState.current.active = false;
+    };
+
+    const handleStepsClick = (e: ReactMouseEvent<HTMLOListElement>): void => {
+        if (dragState.current.moved) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    };
+
     return (
-        <section id="investisseurs" className="flex w-full flex-col items-start gap-2.5 bg-[#e6ded8] px-5 py-16 sm:px-8 lg:px-20 lg:py-[120px]">
+        <section id="investisseurs" className="flex scroll-mt-24 w-full flex-col items-start gap-2.5 bg-[#e6ded8] px-5 py-16 sm:px-8 lg:px-20 lg:py-[120px]">
             <div className="flex w-full flex-col items-start justify-center gap-10">
                 <header className="flex w-full flex-col gap-8 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
                     <div className="flex max-w-[574.68px] flex-col items-start gap-6">
@@ -76,17 +124,25 @@ export const InvestmentBenefitsSection = (): JSX.Element => {
                         paiements selon l’avancement du projet, jusqu’à la remise des clés.
                     </p>
                 </header>
-                <ol className="grid w-full grid-cols-2 gap-10 sm:grid-cols-2 lg:gap-x-6 lg:gap-y-10 xl:flex xl:items-start xl:justify-between">
+                <ol
+                    ref={stepsRef}
+                    onPointerDown={handlePointerDown}
+                    onPointerMove={handlePointerMove}
+                    onPointerUp={handlePointerUp}
+                    onPointerLeave={handlePointerUp}
+                    onClickCapture={handleStepsClick}
+                    className="flex w-full cursor-grab select-none snap-x snap-mandatory items-stretch gap-10 overflow-x-auto active:cursor-grabbing [overscroll-behavior-x:contain] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden [&_img]:pointer-events-none xl:cursor-auto xl:select-auto xl:items-start xl:justify-between xl:gap-x-6 xl:gap-y-10 xl:overflow-visible"
+                >
                     {investmentSteps.map((step) => (
                         <li
-                            className={`flex w-full flex-col items-start gap-[25px] ${step.width} xl:flex-none`}
+                            className={`flex w-[75%] max-w-[320px] flex-none snap-start flex-col items-start gap-[25px] sm:w-[47%] sm:max-w-[380px] lg:w-[31%] ${step.width} xl:flex-none`}
                             key={step.number}
                         >
                             <span
                                 aria-hidden="true"
                                 className="h-3 w-3 rounded-[5.5px] bg-[#ac937e]"
                             />
-                            <img className="h-px w-full" alt="Line" src={step.lineSrc} />
+                            <img className="h-px w-fit lg:w-full object-left translate-y-4 sm:translate-y-5 lg:translate-y-5 xl:translate-y-6  " alt="Line" src={step.lineSrc} />
                             <div className="flex w-full flex-col items-start gap-2">
                                 <span className="h-3.5 font-caption-regular text-[length:var(--caption-regular-font-size)] font-[number:var(--caption-regular-font-weight)] leading-[var(--caption-regular-line-height)] tracking-[var(--caption-regular-letter-spacing)] text-[#2e2c2a] [font-style:var(--caption-regular-font-style)]">
                                     {step.number}
@@ -107,10 +163,10 @@ export const InvestmentBenefitsSection = (): JSX.Element => {
                         une étude personnalisée.
                     </p>
                 </aside>
-                <div className="flex flex-col items-start gap-4 sm:flex-row sm:gap-6">
+                <div className="flex flex-col w-full lg:w-fit items-start gap-4 sm:flex-row sm:gap-6">
                     {actionButtons.map((action) => (
                         <Button
-                            className={`h-auto rounded-none border-0 px-6 py-4 font-button-small text-[length:var(--button-small-font-size)] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] shadow-none [font-style:var(--button-small-font-style)] ${action.className}`}
+                            className={`h-auto w-full lg:w-fit rounded-none border-0 px-6 py-4 font-button-small text-[length:var(--button-small-font-size)] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] shadow-none [font-style:var(--button-small-font-style)] ${action.className}`}
                             key={action.label}
                             type="button"
                         >

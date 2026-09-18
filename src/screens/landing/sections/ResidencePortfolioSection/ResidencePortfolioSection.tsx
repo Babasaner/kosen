@@ -1,6 +1,11 @@
+import { useState } from "react";
 import { Button } from "../../../../components/ui/button";
+import { ANCHORS, RESIDENCE_LINKS } from "../../../../lib/site";
 
-const actions = ["DÉCOUVRIR KŌMOREBI ONE", "TÉLÉCHARGER LES PLANS"];
+const actions = [
+    { label: "DÉCOUVRIR KŌMOREBI ONE", href: RESIDENCE_LINKS.komorebiOne },
+    { label: "TÉLÉCHARGER LES PLANS", href: ANCHORS.planDeMasse },
+];
 
 const residenceDetails = [
     {
@@ -22,6 +27,7 @@ const residenceDetails = [
 ];
 
 export const ResidencePortfolioSection = (): JSX.Element => {
+    const [isPlaying, setIsPlaying] = useState(false);
     return (
         <section
             aria-labelledby="komorebi-title"
@@ -37,21 +43,22 @@ export const ResidencePortfolioSection = (): JSX.Element => {
                 >
                     KOMOREBI
                 </h2>
-                <p className="[font-family:'Lora',Helvetica] text-[18px] font-normal italic leading-7 tracking-[0] text-[#ac937e] sm:text-[22px] lg:text-[28.8px] lg:leading-[44.6px]">
+                <p className="[font-family:'Lora',Helvetica] text-[29px] font-normal italic leading-7 tracking-[0] text-[#ac937e] sm:text-[22px] lg:text-[28.8px] lg:leading-[44.6px]">
                     La lumière du soleil filtrant à travers les feuilles.
                 </p>
                 <nav
                     aria-label="Actions Kōmorebi"
-                    className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-6"
+                    className="flex flex-col w-full justify-center  items-stretch gap-3 sm:flex-row sm:items-center sm:gap-6"
                 >
                     {actions.map((action) => (
                         <Button
-                            key={action}
+                            asChild
+                            key={action.label}
                             type="button"
                             variant="outline"
                             className="h-auto justify-center rounded-none border-[#ac937e] bg-transparent px-6 py-4 font-button-default text-[length:var(--button-default-font-size)] font-[number:var(--button-default-font-weight)] leading-[var(--button-default-line-height)] tracking-[var(--button-default-letter-spacing)] text-white hover:border-[#e6ded8] hover:bg-transparent hover:text-white [font-style:var(--button-default-font-style)]"
                         >
-                            {action}
+                            <a href={action.href}>{action.label}</a>
                         </Button>
                     ))}
                 </nav>
@@ -64,17 +71,28 @@ export const ResidencePortfolioSection = (): JSX.Element => {
                             "url(/img/video-poster.png)",
                     }}
                 >
-                    <Button
-                        type="button"
-                        aria-label="Lire la vidéo Kōmorebi"
-                        className="h-12 w-12 rounded-full bg-[#2e2c2a] p-0 hover:bg-[#43413f] sm:h-16 sm:w-16 lg:h-20 lg:w-20"
-                    >
-                        <img
-                            className="h-[21px] w-[18px] sm:h-[28px] sm:w-6 lg:h-[34.64px] lg:w-[30px]"
-                            alt=""
-                            src="https://c.animaapp.com/EEMUw1qlB3TbilKITU7KZQ/img/polygon-1.svg"
+                    {isPlaying ? (
+                        <iframe
+                            title="Vidéo Kōmorebi"
+                            className="h-full w-full"
+                            src="https://www.youtube.com/embed/W5M7oxgKaPo?autoplay=1"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
                         />
-                    </Button>
+                    ) : (
+                        <Button
+                            type="button"
+                            aria-label="Lire la vidéo Kōmorebi"
+                            onClick={() => setIsPlaying(true)}
+                            className="h-12 w-12 rounded-full bg-[#2e2c2a] p-0 hover:bg-[#43413f] sm:h-16 sm:w-16 lg:h-20 lg:w-20"
+                        >
+                            <img
+                                className="h-[21px] w-[18px] sm:h-[28px] sm:w-6 lg:h-[34.64px] lg:w-[30px]"
+                                alt=""
+                                src="https://c.animaapp.com/EEMUw1qlB3TbilKITU7KZQ/img/polygon-1.svg"
+                            />
+                        </Button>
+                    )}
                 </div>
                 <dl className="grid grid-cols-2 sm:grid-cols-4">
                     {residenceDetails.map((detail, index) => (

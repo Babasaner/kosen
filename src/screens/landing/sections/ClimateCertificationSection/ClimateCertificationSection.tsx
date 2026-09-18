@@ -40,9 +40,9 @@ export const ClimateCertificationSection = (): JSX.Element => {
     }, [goToNext]);
 
     return (
-        <section className="flex w-full flex-col bg-[#e6ded8] lg:min-h-[900px] lg:flex-row lg:items-center lg:justify-between lg:pl-20">
+        <section id="eco-responsable" className="flex order-2 lg:order-1  scroll-mt-24 w-full flex-col bg-[#e6ded8] lg:min-h-[900px] lg:flex-row lg:items-center lg:justify-between lg:pl-20">
             {/* ===== COLONNE GAUCHE ===== */}
-            <div className="flex w-full flex-col items-start gap-6 px-6 py-16 lg:w-[500px] lg:flex-none lg:px-0 lg:py-0">
+            <div className="flex w-full  flex-col items-start gap-6 px-6 py-16 lg:w-[500px] lg:flex-none lg:px-0 lg:py-0">
                 <p className="flex h-3.5 items-center self-stretch font-caption-regular text-[length:var(--caption-regular-font-size)] font-[number:var(--caption-regular-font-weight)] leading-[var(--caption-regular-line-height)] tracking-[var(--caption-regular-letter-spacing)] text-[#ac937e] [font-style:var(--caption-regular-font-style)]">
                     ARCHITECTURE BIOCLIMATIQUE
                 </p>
@@ -80,7 +80,7 @@ export const ClimateCertificationSection = (): JSX.Element => {
                                 ))}
                             </div>
                             <div className="flex h-16 w-full items-center justify-center bg-white p-5">
-                                <p className="w-[350px] [font-family:'Gelion-Bold',Helvetica] text-center text-[22px] font-bold leading-[22px] tracking-[1px] text-[#2e2c2a]">
+                                <p className="w-[350px] [font-family:'Gelion-Bold',Helvetica] text-center text-[16px] lg:text-[22px] font-bold leading-[22px] tracking-[1px] text-[#2e2c2a]">
                                     ETUDE SENGHOR ET SARR NOTAIRES ASSOCIES
                                 </p>
                             </div>

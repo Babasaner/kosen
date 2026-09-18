@@ -1,17 +1,18 @@
 import { Button } from "../../../../components/ui/button";
+import { ANCHORS, BROCHURE_URL } from "../../../../lib/site";
 
 const ctaActions = [
     {
         label: "PARLER À UN CONSEILLER",
         className:
             "border-[#2e2c2a] bg-[#2e2c2a] text-[#eee9e5] hover:bg-[#3b3936] hover:text-[#eee9e5]",
-        href: "#",
+        href: ANCHORS.diaspora,
     },
     {
         label: "TÉLÉCHARGER LA BROCHURE",
         className:
             "border-[#e6ded8] bg-transparent text-[#e6ded8] hover:bg-[#e6ded8] hover:text-[#2e2c2a]",
-        href: "#",
+        href: BROCHURE_URL,
     },
 ];
 
@@ -32,12 +33,13 @@ export const PropertyDevelopmentCtaSection = (): JSX.Element => {
                 <div className="flex w-full sm:w-auto flex-col sm:flex-row flex-wrap items-stretch sm:items-start gap-4 sm:gap-6">
                     {ctaActions.map((action) => (
                         <Button
+                            asChild
                             key={action.label}
                             type="button"
                             variant="outline"
                             className={`h-auto w-full sm:w-auto rounded-none border px-6 py-4 font-button-small text-[10px] sm:text-[length:var(--button-small-font-size)] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] transition-colors [font-style:var(--button-small-font-style)] ${action.className}`}
                         >
-                            {action.label}
+                            <a href={action.href}>{action.label}</a>
                         </Button>
                     ))}
                 </div>

@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "../../../../components/ui/button";
-
-const navigationItems = [
-    { label: "LE CONCEPT", href: "#concept" },
-    { label: "RÉSIDENCES", href: "#residences" },
-    { label: "VIVRE À DAKAR", href: "#dakar" },
-    { label: "INVESTISSEURS", href: "#investisseurs" },
-];
+import {
+    ANCHORS,
+    navigationItems,
+    smoothScrollTo,
+} from "../../../../lib/site";
 
 export const ResidenceHeroSection = (): JSX.Element => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -51,6 +49,10 @@ export const ResidenceHeroSection = (): JSX.Element => {
                                     <li key={item.label}>
                                         <a
                                             href={item.href}
+                                            onClick={(event) => {
+                                                event.preventDefault();
+                                                smoothScrollTo(item.href);
+                                            }}
                                             className="font-caption-bold text-[length:var(--caption-bold-font-size)] font-[number:var(--caption-bold-font-weight)] leading-[var(--caption-bold-line-height)] tracking-[var(--caption-bold-letter-spacing)] text-white [font-style:var(--caption-bold-font-style)] hover:text-[#ac937e] transition-colors duration-200"
                                         >
                                             {item.label}
@@ -72,7 +74,7 @@ export const ResidenceHeroSection = (): JSX.Element => {
                             variant="outline"
                             className="hidden sm:flex h-auto shrink-0 rounded-none border-[#ac937e] bg-transparent px-4 py-3 sm:px-6 sm:py-4 font-button-small text-[10px] sm:text-[length:var(--button-small-font-size)] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] text-white [font-style:var(--button-small-font-style)] hover:border-[#ac937e] hover:bg-[#ac937e]/20 hover:text-white transition-all"
                         >
-                            <a href="tel:+221787978989">
+                            <a href={ANCHORS.diaspora}>
                                 PARLER À UN CONSEILLER
                             </a>
                         </Button>
@@ -84,7 +86,7 @@ export const ResidenceHeroSection = (): JSX.Element => {
                             aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
                             aria-expanded={isMenuOpen}
                         >
-                            <img src="/img/Landing/Link.svg" alt="Menu" className="h-6 w-6 sm:h-8 sm:w-8" />
+                            <img src="/img/Landing/Link.svg" alt="Menu" className="h-[56px] w-[46px] sm:h-8 sm:w-8" />
                         </button>
                     </div>
                 </div>
@@ -113,10 +115,16 @@ export const ResidenceHeroSection = (): JSX.Element => {
                                     ))}
                                     <li className="w-full pt-2 border-t border-white/10">
                                         <Button
+                                            asChild
                                             variant="outline"
                                             className="h-auto w-full mt-2 rounded-none border-[#ac937e] bg-transparent px-6 py-4 font-button-small text-[12px] font-[number:var(--button-small-font-weight)] tracking-[var(--button-small-letter-spacing)] text-white hover:bg-white/10"
                                         >
-                                            PARLER À UN CONSEILLER
+                                            <a
+                                                href={ANCHORS.diaspora}
+                                                onClick={() => setIsMenuOpen(false)}
+                                            >
+                                                PARLER À UN CONSEILLER
+                                            </a>
                                         </Button>
                                     </li>
                                 </ul>
@@ -177,7 +185,7 @@ export const ResidenceHeroSection = (): JSX.Element => {
                             className="flex flex-wrap gap-4 w-full lg:w-fit"
                         >
                             <Button className="h-auto  w-full rounded-none bg-[#2e2c2a]  px-7 py-4 font-button-small text-[length:var(--button-small-font-size)] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] text-white [font-style:var(--button-small-font-style)] hover:bg-[#8f7865] hover:border-[#8f7865] transition-colors duration-300">
-                                EXPLORER KŌSEN
+                                <a href="#concept">  EXPLORER KŌSEN</a>
                             </Button>
 
                         </motion.div>
