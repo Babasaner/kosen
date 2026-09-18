@@ -50,7 +50,7 @@ export const InvestmentInquirySection = (): JSX.Element => {
     const [contactChannel, setContactChannel] = useState("email");
 
     return (
-        <section className="w-full bg-white px-5  sm:px-10  lg:px-20 ">
+        <section className="w-full bg-white px-5 py-10 lg:py-0 sm:px-10   lg:px-20 ">
             <div className="mx-auto grid w-full grid-cols-1 gap-10 lg:grid-cols-[minmax(0,520px)_minmax(0,1fr)_minmax(0,518.64px)] lg:gap-0">
                 <div className="flex flex-col items-start justify-center gap-6 lg:col-start-1 lg:row-start-1 lg:self-center">
                     <p className="font-caption-regular text-center md:text-left text-[length:var(--caption-regular-font-size)] font-[number:var(--caption-regular-font-weight)] leading-[var(--caption-regular-line-height)] tracking-[var(--caption-regular-letter-spacing)] text-[#ac937e] [font-style:var(--caption-regular-font-style)]">
@@ -85,7 +85,7 @@ export const InvestmentInquirySection = (): JSX.Element => {
                 <img
                     className="order-2 h-auto w-full object-cover lg:col-start-3 lg:row-start-1 lg:order-none lg:h-[879px] lg:w-[599px] lg:max-w-none"
                     alt="Photo d'ensemble Kōsen"
-                    src="/img/Photo-densemble-web.jpg"
+                    src="/img/4b036e24d3230745fddd0ec50f95690afc0a1c4a.png"
                 />
 
                 <Card className="order-3 w-full rounded-none  bg-[#e6ded8] shadow-none lg:col-start-3 lg:row-start-1 lg:order-none lg:self-center">
