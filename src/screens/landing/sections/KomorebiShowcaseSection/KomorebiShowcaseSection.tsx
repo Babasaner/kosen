@@ -4,17 +4,17 @@ import { Button } from "../../../../components/ui/button";
 const showcaseProperties = [
     {
         name: "KOSEN One",
-        price: "À PARTIR DE 299.000.000 DE FRANCS CFA",
+        price: "À PARTIR DE 299.000.000 FCFA",
         imageUrl: "/img/kosen-one.jpg",
     },
     {
         name: "KOSEN TWO",
-        price: "À PARTIR DE 299.000.000 DE FRANCS CFA",
+        price: "À PARTIR DE 299.000.000 FCFA",
         imageUrl: "/img/kosen-two.jpg",
     },
     {
         name: "KOMOREBI ONE",
-        price: "À PARTIR DE 269.000.000 DE FRANCS CFA",
+        price: "À PARTIR DE 269.000.000 FCFA",
         imageUrl: "/img/komorebione.png", // L'extension corrigée en .png
     },
 ];
@@ -56,7 +56,7 @@ export const KomorebiShowcaseSection = (): JSX.Element => {
                         <h2 className="font-headings-h1 w-fit text-[length:var(--headings-h1-font-size)] font-[number:var(--headings-h1-font-weight)] leading-[var(--headings-h1-line-height)] tracking-[var(--headings-h1-letter-spacing)] text-[#ac937e] [font-style:var(--headings-h1-font-style)]">
                             {property.name}
                         </h2>
-                        <p className="font-headings-h4 w-fit whitespace-nowrap text-[length:var(--headings-h4-font-size)] font-[number:var(--headings-h4-font-weight)] leading-[var(--headings-h4-line-height)] tracking-[var(--headings-h4-letter-spacing)] text-[#e6ded8] [font-style:var(--headings-h4-font-style)]">
+                        <p className="font-headings-h4 w-fit whitespace-wrap text-[length:var(--headings-h4-font-size)] font-[number:var(--headings-h4-font-weight)] leading-[var(--headings-h4-line-height)] tracking-[var(--headings-h4-letter-spacing)] text-[#e6ded8] [font-style:var(--headings-h4-font-style)]">
                             {property.price}
                         </p>
                         <Button
