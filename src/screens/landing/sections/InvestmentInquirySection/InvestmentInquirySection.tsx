@@ -109,6 +109,7 @@ export const InvestmentInquirySection = (): JSX.Element => {
                                         PAYS DE RÉSIDENCE
                                     </Label>
 
+
                                     <Input
                                         id="country"
                                         className="h-11 rounded-none border-0 border-b border-[#ac937e] bg-transparent px-0 shadow-none focus-visible:ring-0"

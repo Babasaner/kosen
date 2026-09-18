@@ -5,11 +5,13 @@ const ctaActions = [
         label: "PARLER À UN CONSEILLER",
         className:
             "border-[#2e2c2a] bg-[#2e2c2a] text-[#eee9e5] hover:bg-[#3b3936] hover:text-[#eee9e5]",
+        href: "#",
     },
     {
         label: "TÉLÉCHARGER LA BROCHURE",
         className:
             "border-[#e6ded8] bg-transparent text-[#e6ded8] hover:bg-[#e6ded8] hover:text-[#2e2c2a]",
+        href: "#",
     },
 ];
 

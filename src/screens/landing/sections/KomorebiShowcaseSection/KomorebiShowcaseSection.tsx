@@ -6,16 +6,19 @@ const showcaseProperties = [
         name: "KOSEN One",
         price: "À PARTIR DE 299.000.000 FCFA",
         imageUrl: "/img/kosen-one.jpg",
+        link: "https://kosen-project.com/projets/kosen-one/"
     },
     {
         name: "KOSEN TWO",
         price: "À PARTIR DE 299.000.000 FCFA",
         imageUrl: "/img/kosen-two.jpg",
+        link: "https://kosen-project.com/projets/kosen-two/"
     },
     {
         name: "KOMOREBI ONE",
         price: "À PARTIR DE 269.000.000 FCFA",
         imageUrl: "/img/komorebione.png", // L'extension corrigée en .png
+        link: "https://kosen-project.com/projets/komorebi-one/"
     },
 ];
 
@@ -64,7 +67,9 @@ export const KomorebiShowcaseSection = (): JSX.Element => {
                             variant="outline"
                             className="h-auto rounded-none border-[#ac937e] bg-transparent px-6 py-4 font-button-default text-[length:var(--button-default-font-size)] font-[number:var(--button-default-font-weight)] leading-[var(--button-default-line-height)] tracking-[var(--button-default-letter-spacing)] text-[#eee9e5] shadow-none hover:border-[#ac937e] hover:bg-[#ac937e]/15 hover:text-[#eee9e5] transition-colors duration-300 [font-style:var(--button-default-font-style)]"
                         >
-                            DÉCOUVRIR
+                            <a href={property.link} target="_blank" rel="noopener noreferrer">
+                                DÉCOUVRIR
+                            </a>
                         </Button>
                     </div>
                 </motion.article>

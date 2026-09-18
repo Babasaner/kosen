@@ -23,11 +23,10 @@ export const ResidenceHeroSection = (): JSX.Element => {
         <>
             {/* ===== HEADER FIXED STICKY ===== */}
             <header
-                className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 ease-in-out ${
-                    scrolled
-                        ? "bg-[#2e2c2a]/96 backdrop-blur-md shadow-[0_2px_24px_rgba(0,0,0,0.25)]"
-                        : "bg-transparent"
-                }`}
+                className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 ease-in-out ${scrolled
+                    ? "bg-[#2e2c2a]/96 backdrop-blur-md shadow-[0_2px_24px_rgba(0,0,0,0.25)]"
+                    : "bg-transparent"
+                    }`}
             >
                 <div className="mx-auto flex min-h-[80px] w-full max-w-[1920px] items-center justify-between px-5 py-4 sm:px-10 lg:px-20">
                     <Button
@@ -73,7 +72,9 @@ export const ResidenceHeroSection = (): JSX.Element => {
                             variant="outline"
                             className="hidden sm:flex h-auto shrink-0 rounded-none border-[#ac937e] bg-transparent px-4 py-3 sm:px-6 sm:py-4 font-button-small text-[10px] sm:text-[length:var(--button-small-font-size)] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] text-white [font-style:var(--button-small-font-style)] hover:border-[#ac937e] hover:bg-[#ac937e]/20 hover:text-white transition-all"
                         >
-                            PARLER À UN CONSEILLER
+                            <a href="tel:+221787978989">
+                                PARLER À UN CONSEILLER
+                            </a>
                         </Button>
 
                         {/* Burger (Mobile & Tablet) */}
@@ -138,7 +139,7 @@ export const ResidenceHeroSection = (): JSX.Element => {
                 <div className="h-[80px] shrink-0" aria-hidden="true" />
 
                 {/* Contenu centré verticalement */}
-                <div className="mx-auto flex w-full flex-1 items-center px-5 sm:px-10 lg:px-20">
+                <div className="mx-auto flex w-full flex-1 items-end mb-10 lg:mb-0 lg:items-center px-5 sm:px-10 lg:px-20">
                     <div className="flex w-full max-w-[490px] flex-col items-start gap-8">
 
                         {/* Titre — slide up reveal */}
@@ -154,14 +155,14 @@ export const ResidenceHeroSection = (): JSX.Element => {
                             </motion.h1>
                         </div>
 
-                    
+
                         {/* Sous-titre */}
                         <div className="overflow-hidden">
                             <motion.p
                                 initial={{ y: "80%", opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-                                className="max-w-[340px] font-body-regular text-[14px] sm:text-[length:var(--body-regular-font-size)] font-[number:var(--body-regular-font-weight)] leading-[var(--body-regular-line-height)] tracking-[var(--body-regular-letter-spacing)] text-white/85 [font-style:var(--body-regular-font-style)]"
+                                className="max-w-[325px] lg:max-w-[490px] font-body-regular text-[14px] sm:text-[length:var(--body-regular-font-size)] font-[number:var(--body-regular-font-weight)] leading-[var(--body-regular-line-height)] tracking-[var(--body-regular-letter-spacing)] text-white/85 [font-style:var(--body-regular-font-style)]"
                             >
                                 Architecture, nature et patrimoine réunis dans un micro-quartier
                                 résidentiel d&apos;exception.
@@ -173,32 +174,17 @@ export const ResidenceHeroSection = (): JSX.Element => {
                             initial={{ opacity: 0, y: 24 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.7, ease: "easeOut", delay: 0.85 }}
-                            className="flex flex-wrap gap-4"
+                            className="flex flex-wrap gap-4 w-full lg:w-fit"
                         >
-                            <Button className="h-auto rounded-none bg-[#2e2c2a]  px-7 py-4 font-button-small text-[length:var(--button-small-font-size)] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] text-white [font-style:var(--button-small-font-style)] hover:bg-[#8f7865] hover:border-[#8f7865] transition-colors duration-300">
+                            <Button className="h-auto  w-full rounded-none bg-[#2e2c2a]  px-7 py-4 font-button-small text-[length:var(--button-small-font-size)] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] text-white [font-style:var(--button-small-font-style)] hover:bg-[#8f7865] hover:border-[#8f7865] transition-colors duration-300">
                                 EXPLORER KŌSEN
                             </Button>
-                            
+
                         </motion.div>
                     </div>
                 </div>
 
-                {/* Scroll indicator bas de page */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1.4, duration: 0.8 }}
-                    className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-                >
-                    <span className="font-caption-regular text-[10px] tracking-[3px] text-white/50 uppercase">
-                        Scroll
-                    </span>
-                    <motion.div
-                        animate={{ y: [0, 8, 0] }}
-                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                        className="h-10 w-[1px] bg-gradient-to-b from-white/50 to-transparent"
-                    />
-                </motion.div>
+
             </section>
         </>
     );

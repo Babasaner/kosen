@@ -10,10 +10,10 @@ const climateFeatures = [
 ];
 
 const partnerImages = [
-    { src: "/img/acc.png", className: "h-[63px] w-full object-contain" },
-    { src: "/img/vinci.png", className: "h-[63px] w-full object-contain" },
-    { src: "/img/aars.png", className: "h-[63px] w-full object-contain" },
-    { src: "/img/mazars.png", className: "h-16 w-full object-contain" },
+    { src: "/img/acc.png", className: "h-[63px] w-full object-contain bg-white" },
+    { src: "/img/vinci.png", className: "h-[63px] w-full object-contain bg-white" },
+    { src: "/img/aars.png", className: "h-[63px] w-full object-contain bg-[#750805]" },
+    { src: "/img/mazars.png", className: "h-16 w-full object-contain bg-white" },
 ];
 
 // ✅ Images du slideshow — remplace ou ajoute d'autres images ici
@@ -57,9 +57,8 @@ export const ClimateCertificationSection = (): JSX.Element => {
                     {climateFeatures.map((feature, index) => (
                         <div
                             key={feature.number}
-                            className={`flex min-h-[90px] items-center border-b border-[#2e2c2a2e] py-[25px] ${
-                                index % 2 === 0 ? "border-r pr-[18px]" : "pl-[18px]"
-                            }`}
+                            className={`flex min-h-[90px] items-center border-b border-[#2e2c2a2e] py-[25px] ${index % 2 === 0 ? "border-r pr-[18px]" : "pl-[18px]"
+                                }`}
                         >
                             <dt className="font-body-bold text-[length:var(--body-bold-font-size)] font-[number:var(--body-bold-font-weight)] leading-[var(--body-bold-line-height)] tracking-[var(--body-bold-letter-spacing)] text-[#2e2c2a] [font-style:var(--body-bold-font-style)]">
                                 {feature.number}
@@ -75,7 +74,7 @@ export const ClimateCertificationSection = (): JSX.Element => {
                     </h3>
                     <Card className="w-full rounded-none border-0 bg-transparent shadow-none">
                         <CardContent className="flex flex-col gap-2.5 p-0">
-                            <div className="grid grid-cols-4 gap-1">
+                            <div className="grid grid-cols-4 gap-3">
                                 {partnerImages.map((image) => (
                                     <img key={image.src} className={image.className} alt="Partenaire" src={image.src} />
                                 ))}
@@ -136,11 +135,10 @@ export const ClimateCertificationSection = (): JSX.Element => {
                             className="relative flex items-center justify-center"
                         >
                             <span
-                                className={`block rounded-full transition-all duration-300 ${
-                                    activeSlide === index
-                                        ? "h-5 w-5 bg-[#ac937e]"
-                                        : "h-4 w-4 bg-white/100 hover:bg-white/80"
-                                }`}
+                                className={`block rounded-full transition-all duration-300 ${activeSlide === index
+                                    ? "h-5 w-5 bg-[#ac937e]"
+                                    : "h-4 w-4 bg-white/100 hover:bg-white/80"
+                                    }`}
                             />
                             {/* Barre de progression pour le slide actif */}
                             {activeSlide === index && (
@@ -156,7 +154,7 @@ export const ClimateCertificationSection = (): JSX.Element => {
                     ))}
                 </div>
 
-               
+
             </div>
         </section>
     );
