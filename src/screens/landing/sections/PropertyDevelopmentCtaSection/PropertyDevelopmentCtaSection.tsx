@@ -26,7 +26,7 @@ export const PropertyDevelopmentCtaSection = (): JSX.Element => {
             <div className="flex w-full max-w-[1440px] flex-col items-start gap-10">
                 <h2
                     id="property-development-cta-title"
-                    className="max-w-[896px] font-display-display-large text-[40px] leading-[48px] sm:text-[length:var(--display-display-large-font-size)] font-[number:var(--display-display-large-font-weight)] sm:leading-[var(--display-display-large-line-height)] tracking-[var(--display-display-large-letter-spacing)] text-white [font-style:var(--display-display-large-font-style)]"
+                    className="w-fit lg:max-w-[896px] font-display-display-large text-[45px] leading-[72px] sm:text-[length:var(--display-display-large-font-size)] font-[number:var(--display-display-large-font-weight)] sm:leading-[var(--display-display-large-line-height)] tracking-[var(--display-display-large-letter-spacing)] text-white [font-style:var(--display-display-large-font-style)] "
                 >
                     Construisons Votre Projet Immobilier À Dakar
                 </h2>

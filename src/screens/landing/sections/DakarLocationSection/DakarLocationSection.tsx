@@ -14,22 +14,22 @@ const mapLocations = [
     {
         id: "PORT",
         label: "Port",
-        top: "38.2%",
-        left: "60%",
+        top: "25%",
+        left: "57%",
         color: "bg-[#ac937e]",
     },
     {
         id: "GRAND THÉÂTRE",
         label: "Grand Théâtre national",
-        top: "56.4%",
-        left: "63.5%",
+        top: "4%",
+        left: "40.5%",
         color: "bg-[#ac937e]",
     },
     {
         id: "MUSÉE DES CIVILISATIONS NOIRES",
         label: "Musée des Civilisations noires",
-        top: "58.7%",
-        left: "12.1%",
+        top: "20.7%",
+        left: "17.1%",
         color: "bg-[#ac937e]",
         markerAfter: true,
     },
@@ -83,7 +83,12 @@ export const DakarLocationSection = (): JSX.Element => {
             <div className="flex w-full flex-col items-center justify-between gap-10 lg:flex-row lg:gap-12">
                 <figure className="relative w-full shrink-0 overflow-hidden bg-white lg:w-[55%]">
                     <img
-                        className="block h-auto w-full object-cover"
+                        className="block h-auto w-full object-cover lg:hidden"
+                        alt="Carte de Dakar montrant KŌSEN et les lieux environnants"
+                        src="/img/map_kosen.png"
+                    />
+                    <img
+                        className="hidden h-auto w-full object-cover lg:block"
                         alt="Map of Dakar showing KŌSEN and nearby landmarks"
                         src="/img/map.png"
                     />
@@ -91,7 +96,7 @@ export const DakarLocationSection = (): JSX.Element => {
                         Carte de Dakar indiquant KŌSEN, le Port, le Grand Théâtre national,
                         le Musée des Civilisations noires et l&apos;avenue Faidherbe.
                     </figcaption>
-                    <ul className="m-0 list-none p-0">
+                    <ul className="m-0 hidden list-none p-0 lg:block">
                         <AnimatePresence>
                             {mapLocations.map((location) => {
                                 const isActive = selectedPlace === location.id;

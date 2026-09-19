@@ -254,7 +254,7 @@ const projectOptions = [
     { value: "komorebi-one", label: "KŌMOREBI One" },
     { value: "business-center", label: "KŌSEN Business Center" },
     { value: "micro-quartier", label: "Le micro-quartier KŌSEN" },
-    { value: "indecis", label: "Je ne sais pas encore" },
+    { value: "indecis", label: "Autres" },
 ];
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -268,27 +268,40 @@ export const InvestmentInquirySection = (): JSX.Element => {
     const [contactChannel, setContactChannel] = useState("email");
     const [consent, setConsent] = useState(false);
     const [error, setError] = useState("");
+    const [dialog, setDialog] = useState<"review" | "success" | null>(null);
 
     const dialCode = countries.find((item) => item.value === country)?.dialCode ?? "";
     const countryLabel = countries.find((item) => item.value === country)?.label ?? country;
     const propertyLabel =
         projectOptions.find((item) => item.value === property)?.label ?? property;
+    const languageLabel =
+        { francais: "Français", anglais: "Anglais", wolof: "Wolof", arabe: "Arabe" }[language] ?? language;
+    const contactChannelLabel =
+        contactChannels.find((channel) => channel.value === contactChannel)?.label ?? contactChannel;
 
-    const buildLeadMessage = (): string => {
-        const lines = [
-            `Pays de résidence : ${countryLabel}`,
-            `Langue préférée : ${language}`,
-            `E-mail : ${email}`,
-            phone ? `Téléphone / WhatsApp : ${dialCode} ${phone}` : "",
-            `Bien recherché : ${propertyLabel}`,
-            `Canal de contact préféré : ${contactChannel}`,
-        ].filter(Boolean);
-        return encodeURIComponent(lines.join("\n"));
+    const handlePhoneChange = (value: string): void => {
+        const hasInternationalPrefix = value.trim().startsWith("+");
+        const digits = value.replace(/\D/g, "");
+        const matchingCountry = countries
+            .filter((item) => item.dialCode && digits.startsWith(item.dialCode.replace("+", "")))
+            .sort((first, second) => second.dialCode.length - first.dialCode.length)[0];
+
+        if (matchingCountry && (hasInternationalPrefix || !country)) {
+            setCountry(matchingCountry.value);
+            setPhone(digits.slice(matchingCountry.dialCode.replace("+", "").length));
+            return;
+        }
+
+        setPhone(digits);
     };
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
         event.preventDefault();
         setError("");
+        if (!country) {
+            setError("Merci de sélectionner votre pays de résidence pour obtenir le bon indicatif.");
+            return;
+        }
         if (!EMAIL_PATTERN.test(email)) {
             setError("Merci de renseigner un e-mail valide pour être recontacté.");
             return;
@@ -306,13 +319,19 @@ export const InvestmentInquirySection = (): JSX.Element => {
             setError("Merci d'accepter d'être recontacté par KŌSEN.");
             return;
         }
-        const message = buildLeadMessage();
-        const subject = encodeURIComponent("Demande conseiller diaspora — KŌSEN");
-        if (contactChannel === "whatsapp") {
-            window.open(`https://wa.me/${(dialCode + phone).replace(/\D/g, "")}?text=${message}`, "_blank", "noopener,noreferrer");
-        } else {
-            window.location.href = `mailto:${CONTACT.email}?subject=${subject}&body=${message}`;
-        }
+        setDialog("review");
+    };
+
+    const handleConfirm = (): void => {
+        setCountry("");
+        setLanguage("francais");
+        setEmail("");
+        setPhone("");
+        setProperty("");
+        setContactChannel("email");
+        setConsent(false);
+        setError("");
+        setDialog("success");
     };
 
     const openWhatsApp = (): void => {
@@ -456,7 +475,7 @@ export const InvestmentInquirySection = (): JSX.Element => {
                                         TÉLÉPHONE / WHATSAPP *
                                     </Label>
 
-                                    <div className="flex items-center border-b border-[#ac937e]">
+                                    <div className="flex items-center gap-2 border-b border-[#ac937e]">
                                         {dialCode && (
                                             <span className="shrink-0 font-body-regular text-[length:var(--body-regular-font-size)] font-[number:var(--body-regular-font-weight)] leading-[var(--body-regular-line-height)] tracking-[var(--body-regular-letter-spacing)] text-[#6d6b6a] [font-style:var(--body-regular-font-style)]">
                                                 {dialCode}
@@ -467,10 +486,10 @@ export const InvestmentInquirySection = (): JSX.Element => {
                                             type="tel"
                                             inputMode="tel"
                                             value={phone}
-                                            onChange={(event) => setPhone(event.target.value)}
+                                            onChange={(event) => handlePhoneChange(event.target.value)}
                                             placeholder={
                                                 dialCode
-                                                    ? "Numéro de téléphone"
+                                                    ? "Votre numéro de téléphone"
                                                     : "Ex : 78 797 89 89"
                                             }
                                             className="h-11 flex-1 rounded-none border-0 bg-transparent px-0 shadow-none focus-visible:ring-0"
@@ -590,6 +609,78 @@ export const InvestmentInquirySection = (): JSX.Element => {
                     </CardContent>
                 </Card>
             </div>
+            {dialog && (
+                <div
+                    className="fixed inset-0 z-[100] flex items-center justify-center bg-[#2e2c2acc] px-5 py-8"
+                    role="presentation"
+                    onMouseDown={(event) => {
+                        if (event.target === event.currentTarget) {
+                            setDialog(null);
+                        }
+                    }}
+                >
+                    <div
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="inquiry-dialog-title"
+                        className="w-full max-w-[520px] border border-[#ac937e] bg-[#e6ded8] p-6 text-[#2e2c2a] shadow-2xl sm:p-8"
+                    >
+                        {dialog === "review" ? (
+                            <>
+                                <p className="font-caption-regular text-[12px] tracking-[0.08em] text-[#ac937e]">
+                                    DERNIÈRE VÉRIFICATION
+                                </p>
+                                <h3 id="inquiry-dialog-title" className="mt-2 font-headings-h4 text-2xl leading-tight">
+                                    Votre demande est prête
+                                </h3>
+                                <p className="mt-3 font-body-regular text-sm leading-6">
+                                    Vérifiez vos informations avant de les transmettre à notre équipe.
+                                </p>
+                                <dl className="mt-6 divide-y divide-[#2e2c2a2e] border-y border-[#2e2c2a2e] text-sm">
+                                    <div className="flex justify-between gap-4 py-3"><dt className="text-[#6d6b6a]">Pays</dt><dd className="text-right font-medium">{countryLabel}</dd></div>
+                                    <div className="flex justify-between gap-4 py-3"><dt className="text-[#6d6b6a]">E-mail</dt><dd className="break-all text-right font-medium">{email}</dd></div>
+                                    <div className="flex justify-between gap-4 py-3"><dt className="text-[#6d6b6a]">Téléphone</dt><dd className="text-right font-medium">{dialCode} {phone}</dd></div>
+                                    <div className="flex justify-between gap-4 py-3"><dt className="text-[#6d6b6a]">Projet</dt><dd className="text-right font-medium">{propertyLabel}</dd></div>
+                                    <div className="flex justify-between gap-4 py-3"><dt className="text-[#6d6b6a]">Contact par</dt><dd className="text-right font-medium">{contactChannelLabel}</dd></div>
+                                    <div className="flex justify-between gap-4 py-3"><dt className="text-[#6d6b6a]">Langue</dt><dd className="text-right font-medium">{languageLabel}</dd></div>
+                                </dl>
+                                <div className="mt-6 flex flex-col gap-3 sm:flex-row-reverse">
+                                    <Button
+                                        type="button"
+                                        onClick={handleConfirm}
+                                        className="h-11 flex-1 rounded-none bg-[#2e2c2a] font-button-default text-white hover:bg-[#2e2c2a]"
+                                    >
+                                        ENVOYER MA DEMANDE
+                                    </Button>
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        onClick={() => setDialog(null)}
+                                        className="h-11 flex-1 rounded-none border-[#2e2c2a] bg-transparent text-[#2e2c2a] hover:bg-transparent hover:text-[#2e2c2a]"
+                                    >
+                                        MODIFIER
+                                    </Button>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <p className="font-caption-regular text-[12px] tracking-[0.08em] text-[#ac937e]">DEMANDE TRANSMISE</p>
+                                <h3 id="inquiry-dialog-title" className="mt-2 font-headings-h4 text-2xl leading-tight">Merci pour votre intérêt pour KŌSEN</h3>
+                                <p className="mt-4 font-body-regular text-sm leading-6">
+                                    Merci pour la confiance que vous accordez à KŌSEN. Votre projet immobilier à Dakar mérite une attention particulière : notre équipe vous contactera prochainement pour vous présenter les opportunités les plus adaptées à vos ambitions.
+                                </p>
+                                <Button
+                                    type="button"
+                                    onClick={() => setDialog(null)}
+                                    className="mt-6 h-11 w-full rounded-none bg-[#2e2c2a] font-button-default text-white hover:bg-[#2e2c2a]"
+                                >
+                                    FERMER
+                                </Button>
+                            </>
+                        )}
+                    </div>
+                </div>
+            )}
         </section>
     );
 };

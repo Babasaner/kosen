@@ -3,8 +3,8 @@ import { Button } from "../../../../components/ui/button";
 import { ANCHORS, RESIDENCE_LINKS } from "../../../../lib/site";
 
 const actions = [
-    { label: "DÉCOUVRIR KŌMOREBI ONE", href: RESIDENCE_LINKS.komorebiOne },
-    { label: "TÉLÉCHARGER LES PLANS", href: ANCHORS.planDeMasse },
+    { label: "DÉCOUVRIR KŌMOREBI ONE", href: ANCHORS.planDeMasse, target: "_self" },
+    { label: "TÉLÉCHARGER LES PLANS", href: "plan/Komorebi-One_plans.pdf", target: "_blank" },
 ];
 
 const residenceDetails = [
@@ -58,7 +58,9 @@ export const ResidencePortfolioSection = (): JSX.Element => {
                             variant="outline"
                             className="h-auto justify-center rounded-none border-[#ac937e] bg-transparent px-6 py-4 font-button-default text-[length:var(--button-default-font-size)] font-[number:var(--button-default-font-weight)] leading-[var(--button-default-line-height)] tracking-[var(--button-default-letter-spacing)] text-white hover:border-[#e6ded8] hover:bg-transparent hover:text-white [font-style:var(--button-default-font-style)]"
                         >
-                            <a href={action.href}>{action.label}</a>
+                            <a href={action.href} target={action.target}>
+                                {action.label}
+                            </a>
                         </Button>
                     ))}
                 </nav>
@@ -89,7 +91,7 @@ export const ResidencePortfolioSection = (): JSX.Element => {
                             <img
                                 className="h-[21px] w-[18px] sm:h-[28px] sm:w-6 lg:h-[34.64px] lg:w-[30px]"
                                 alt=""
-                                src="https://c.animaapp.com/EEMUw1qlB3TbilKITU7KZQ/img/polygon-1.svg"
+                                src="/img/play-icon.svg"
                             />
                         </Button>
                     )}

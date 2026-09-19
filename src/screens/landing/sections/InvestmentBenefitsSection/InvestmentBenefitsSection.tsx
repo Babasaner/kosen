@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import type { MouseEvent as ReactMouseEvent, PointerEvent as ReactPointerEvent } from "react";
 import { Button } from "../../../../components/ui/button";
+import { Link } from "lucide-react";
 
 const investmentSteps = [
     {
@@ -52,11 +53,13 @@ const actionButtons = [
         label: "ÉTUDIER MON PROJET",
         className:
             "bg-[#2e2c2a] text-[#eee9e5] hover:bg-[#2e2c2a] hover:text-[#eee9e5]",
+            Link: "#diaspora",
     },
     {
         label: "DEMANDER LES DISPONIBILITÉS",
         className:
             "bg-[#ac937e] text-[#eee9e5] hover:bg-[#ac937e] hover:text-[#eee9e5]",
+            Link: "#diaspora",
     },
 ];
 
@@ -165,13 +168,17 @@ export const InvestmentBenefitsSection = (): JSX.Element => {
                 </aside>
                 <div className="flex flex-col w-full lg:w-fit items-start gap-4 sm:flex-row sm:gap-6">
                     {actionButtons.map((action) => (
+                       
+                        <a className="w-full lg:w-fit" href={action.Link} key={action.Link}>
                         <Button
                             className={`h-auto w-full lg:w-fit rounded-none border-0 px-6 py-4 font-button-small text-[length:var(--button-small-font-size)] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] shadow-none [font-style:var(--button-small-font-style)] ${action.className}`}
                             key={action.label}
                             type="button"
                         >
+                            
                             {action.label}
                         </Button>
+                        </a>
                     ))}
                 </div>
             </div>

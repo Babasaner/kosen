@@ -30,7 +30,7 @@ export const UrbanReforestationSection = (): JSX.Element => {
                 <Button
                     type="button"
                     variant="outline"
-                    className="h-auto rounded-none border-[#ac937e] bg-transparent px-[24px] py-[16px] font-button-default text-[16px] font-[number:var(--button-default-font-weight)] leading-[16px] tracking-[var(--button-default-letter-spacing)] text-white shadow-none hover:border-[#ac937e] hover:bg-white/10 hover:text-white focus-visible:ring-[#ac937e] sm:px-6 sm:py-4 sm:text-[length:var(--button-default-font-size)] sm:leading-[var(--button-default-line-height)] [font-style:var(--button-default-font-style)]"
+                    className="h-auto hidden rounded-none border-[#ac937e] bg-transparent px-[24px] py-[16px] font-button-default text-[16px] font-[number:var(--button-default-font-weight)] leading-[16px] tracking-[var(--button-default-letter-spacing)] text-white shadow-none hover:border-[#ac937e] hover:bg-white/10 hover:text-white focus-visible:ring-[#ac937e] sm:px-6 sm:py-4 sm:text-[length:var(--button-default-font-size)] sm:leading-[var(--button-default-line-height)] [font-style:var(--button-default-font-style)]"
                 >
                     COMPRENDRE L&apos;ENGAGEMENT
                 </Button>

@@ -10,7 +10,6 @@ import { ResidenceIntroductionSection } from "./sections/ResidenceIntroductionSe
 import { ResidencePortfolioSection } from "./sections/ResidencePortfolioSection";
 import { SiteFooterSection } from "./sections/SiteFooterSection/SiteFooterSection";
 import { UrbanReforestationSection } from "./sections/UrbanReforestationSection/UrbanReforestationSection";
-import { VideoShowcaseSection } from "./sections/VideoShowcaseSection/VideoShowcaseSection";
 import { FadeIn } from "../../components/animations/FadeIn";
 
 export const Landing = (): JSX.Element => {

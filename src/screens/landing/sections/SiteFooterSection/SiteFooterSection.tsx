@@ -13,7 +13,7 @@ const mutedTextClassName =
 
 export const SiteFooterSection = (): JSX.Element => {
     return (
-        <footer className="flex w-full  flex-col items-center gap-10 overflow-hidden bg-[#2e2c2a]  px-6 pt-[120px] sm:px-10 lg:px-20">
+        <footer className="flex w-full  flex-col items-center gap-10 overflow-hidden bg-[#2e2c2a]  px-6 pt-[120px] pb-[80px] l sm:px-10 lg:px-20">
 
 
             <div className="w-full shrink-0">

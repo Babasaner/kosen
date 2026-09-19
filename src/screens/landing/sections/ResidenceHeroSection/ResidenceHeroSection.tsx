@@ -12,37 +12,49 @@ export const ResidenceHeroSection = (): JSX.Element => {
     const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
-        const handleScroll = () => setScrolled(window.scrollY > 60);
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 60);
+        };
+
         window.addEventListener("scroll", handleScroll, { passive: true });
-        return () => window.removeEventListener("scroll", handleScroll);
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
     }, []);
 
     return (
         <>
             {/* ===== HEADER FIXED STICKY ===== */}
             <header
-                className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 ease-in-out ${scrolled
-                    ? "bg-[#2e2c2a]/96 backdrop-blur-md shadow-[0_2px_24px_rgba(0,0,0,0.25)]"
-                    : "bg-transparent"
-                    }`}
+                className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 ease-in-out ${
+                    scrolled
+                        ? "bg-[#2e2c2a]/96 backdrop-blur-md shadow-[0_2px_24px_rgba(0,0,0,0.25)]"
+                        : "bg-transparent"
+                }`}
             >
-                <div className="mx-auto flex min-h-[80px] w-full max-w-[1920px] items-center justify-between px-5 py-4 sm:px-10 lg:px-20">
+                <div className="relative mx-auto flex min-h-[80px] w-full max-w-[1920px] items-center justify-between px-5 py-4 sm:px-10 lg:px-20">
+                    {/* ===== LOGO ===== */}
                     <Button
                         variant="ghost"
                         className="h-auto shrink-0 rounded-none p-0 hover:bg-transparent"
                         aria-label="Accueil"
-                        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                        onClick={() =>
+                            window.scrollTo({
+                                top: 0,
+                                behavior: "smooth",
+                            })
+                        }
                     >
-                        {/* Logo toujours blanc — le header devient sombre au scroll donc ça reste lisible */}
                         <img
                             src="/img/logo-white.png"
                             alt="Logo KŌSEN"
-                            className="block h-[28px] w-auto sm:h-[34px] object-contain"
+                            className="block h-[28px] w-auto object-contain sm:h-[34px]"
                         />
                     </Button>
 
-                    {/* Navigation Desktop */}
-                    <div className="hidden lg:flex items-center gap-8">
+                    {/* ===== NAVIGATION DESKTOP ===== */}
+                    <div className="hidden items-center gap-8 lg:flex">
                         <nav aria-label="Navigation principale">
                             <ul className="flex items-center gap-8">
                                 {navigationItems.map((item) => (
@@ -53,7 +65,7 @@ export const ResidenceHeroSection = (): JSX.Element => {
                                                 event.preventDefault();
                                                 smoothScrollTo(item.href);
                                             }}
-                                            className="font-caption-bold text-[length:var(--caption-bold-font-size)] font-[number:var(--caption-bold-font-weight)] leading-[var(--caption-bold-line-height)] tracking-[var(--caption-bold-letter-spacing)] text-white [font-style:var(--caption-bold-font-style)] hover:text-[#ac937e] transition-colors duration-200"
+                                            className="font-caption-bold text-[length:var(--caption-bold-font-size)] font-[number:var(--caption-bold-font-weight)] leading-[var(--caption-bold-line-height)] tracking-[var(--caption-bold-letter-spacing)] text-white transition-colors duration-200 hover:text-[#ac937e] [font-style:var(--caption-bold-font-style)]"
                                         >
                                             {item.label}
                                         </a>
@@ -61,71 +73,112 @@ export const ResidenceHeroSection = (): JSX.Element => {
                                 ))}
                             </ul>
                         </nav>
+
                         <Button
                             variant="ghost"
-                            className="h-auto shrink-0 rounded-none p-0 font-caption-bold text-center text-[length:var(--caption-bold-font-size)] font-[number:var(--caption-bold-font-weight)] leading-[var(--caption-bold-line-height)] tracking-[var(--caption-bold-letter-spacing)] text-white [font-style:var(--caption-bold-font-style)] hover:bg-transparent hover:text-[#ac937e] transition-colors"
+                            className="hidden h-auto shrink-0 rounded-none p-0 text-center font-caption-bold text-[length:var(--caption-bold-font-size)] font-[number:var(--caption-bold-font-weight)] leading-[var(--caption-bold-line-height)] tracking-[var(--caption-bold-letter-spacing)] text-white transition-colors hover:bg-transparent hover:text-[#ac937e] [font-style:var(--caption-bold-font-style)]"
                         >
                             FR / EN
                         </Button>
                     </div>
 
+                    {/* ===== CTA + BURGER ===== */}
                     <div className="flex items-center gap-4">
-                        <Button
-                            variant="outline"
-                            className="hidden sm:flex h-auto shrink-0 rounded-none border-[#ac937e] bg-transparent px-4 py-3 sm:px-6 sm:py-4 font-button-small text-[10px] sm:text-[length:var(--button-small-font-size)] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] text-white [font-style:var(--button-small-font-style)] hover:border-[#ac937e] hover:bg-[#ac937e]/20 hover:text-white transition-all"
-                        >
-                            <a href={ANCHORS.diaspora}>
+                        {/* CTA Desktop / Tablet */}
+                        <a href={ANCHORS.diaspora}>
+                            <Button
+                                variant="outline"
+                                className="hidden h-auto shrink-0 rounded-none border-[#ac937e] bg-transparent px-4 py-3 font-button-small text-[10px] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] text-white transition-all hover:border-[#ac937e] hover:bg-[#ac937e]/20 hover:text-white sm:flex sm:px-6 sm:py-4 sm:text-[length:var(--button-small-font-size)] [font-style:var(--button-small-font-style)]"
+                            >
                                 PARLER À UN CONSEILLER
-                            </a>
-                        </Button>
+                            </Button>
+                        </a>
 
-                        {/* Burger (Mobile & Tablet) */}
+                        {/* ===== BURGER MOBILE & TABLET ===== */}
                         <button
-                            className="lg:hidden flex items-center justify-center p-2"
-                            onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+                            type="button"
+                            className="relative z-[70] flex items-center justify-center p-2 lg:hidden"
+                            onClick={() => {
+                                setIsMenuOpen((prev) => !prev);
+                            }}
+                            aria-label={
+                                isMenuOpen
+                                    ? "Fermer le menu"
+                                    : "Ouvrir le menu"
+                            }
                             aria-expanded={isMenuOpen}
                         >
-                            <img src="/img/Landing/Link.svg" alt="Menu" className="h-[56px] w-[46px] sm:h-8 sm:w-8" />
+                            <img
+                                src="/img/Landing/Link.svg"
+                                alt="Menu"
+                                className="h-[56px] w-[46px] object-contain sm:h-8 sm:w-8"
+                            />
                         </button>
                     </div>
                 </div>
 
-                {/* Mobile Menu — slide down */}
+                {/* ===================================================== */}
+                {/* MENU MOBILE / TABLETTE */}
+                {/* ===================================================== */}
+
                 <AnimatePresence>
                     {isMenuOpen && (
                         <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className="overflow-hidden bg-[#2e2c2a] lg:hidden"
+                            initial={{
+                                opacity: 0,
+                                height: 0,
+                            }}
+                            animate={{
+                                opacity: 1,
+                                height: "auto",
+                            }}
+                            exit={{
+                                opacity: 0,
+                                height: 0,
+                            }}
+                            transition={{
+                                duration: 0.3,
+                                ease: "easeInOut",
+                            }}
+                            className="absolute left-0 right-0 top-full z-[60] overflow-hidden bg-[#2e2c2a] shadow-[0_10px_30px_rgba(0,0,0,0.25)] lg:hidden"
                         >
-                            <nav aria-label="Navigation mobile" className="px-5 py-6">
+                            <nav
+                                aria-label="Navigation mobile"
+                                className="px-5 py-6 sm:px-10"
+                            >
                                 <ul className="flex flex-col items-start gap-5">
                                     {navigationItems.map((item) => (
                                         <li key={item.label}>
                                             <a
                                                 href={item.href}
-                                                onClick={() => setIsMenuOpen(false)}
-                                                className="font-caption-bold text-[15px] font-[number:var(--caption-bold-font-weight)] tracking-[2px] text-white hover:text-[#ac937e] transition-colors"
+                                                onClick={(event) => {
+                                                    event.preventDefault();
+                                                    setIsMenuOpen(false);
+                                                    smoothScrollTo(item.href);
+                                                }}
+                                                className="font-caption-bold text-[15px] font-[number:var(--caption-bold-font-weight)] tracking-[2px] text-white transition-colors hover:text-[#ac937e]"
                                             >
                                                 {item.label}
                                             </a>
                                         </li>
                                     ))}
-                                    <li className="w-full pt-2 border-t border-white/10">
-                                        <Button
-                                            asChild
-                                            variant="outline"
-                                            className="h-auto w-full mt-2 rounded-none border-[#ac937e] bg-transparent px-6 py-4 font-button-small text-[12px] font-[number:var(--button-small-font-weight)] tracking-[var(--button-small-letter-spacing)] text-white hover:bg-white/10"
+
+                                    {/* ===== CTA MOBILE ===== */}
+                                    <li className="w-full border-t border-white/10 pt-2">
+                                        <a
+                                            href={ANCHORS.diaspora}
+                                            onClick={() => {
+                                                setIsMenuOpen(false);
+                                            }}
+                                            className="block w-full"
                                         >
-                                            <a
-                                                href={ANCHORS.diaspora}
-                                                onClick={() => setIsMenuOpen(false)}
+                                            <Button
+                                                variant="outline"
+                                                className="mt-2 h-auto w-full rounded-none border-[#ac937e] bg-transparent px-6 py-4 font-button-small text-[12px] font-[number:var(--button-small-font-weight)] tracking-[var(--button-small-letter-spacing)] text-white hover:bg-white/10"
                                             >
                                                 PARLER À UN CONSEILLER
-                                            </a>
-                                        </Button>
+                                            </Button>
+                                        </a>
                                     </li>
                                 </ul>
                             </nav>
@@ -134,9 +187,12 @@ export const ResidenceHeroSection = (): JSX.Element => {
                 </AnimatePresence>
             </header>
 
-            {/* ===== HERO SECTION ===== */}
+            {/* ========================================================= */}
+            {/* HERO SECTION */}
+            {/* ========================================================= */}
+
             <section
-                className="relative flex min-h-[100vh] w-full flex-col overflow-hidden text-white bg-cover bg-center bg-no-repeat"
+                className="relative flex min-h-[100vh] w-full flex-col overflow-hidden bg-cover bg-center bg-no-repeat text-white"
                 style={{
                     backgroundImage:
                         "linear-gradient(0deg, rgba(46,44,42,0.72) 0%, rgba(46,44,42,0.5) 100%), url('/img/kosen-hero.jpg')",
@@ -144,55 +200,91 @@ export const ResidenceHeroSection = (): JSX.Element => {
                 aria-labelledby="residence-hero-title"
             >
                 {/* Spacer pour le header fixe */}
-                <div className="h-[80px] shrink-0" aria-hidden="true" />
+                <div
+                    className="h-[80px] shrink-0"
+                    aria-hidden="true"
+                />
 
                 {/* Contenu centré verticalement */}
-                <div className="mx-auto flex w-full flex-1 items-end mb-10 lg:mb-0 lg:items-center px-5 sm:px-10 lg:px-20">
+                <div className="mx-auto mb-10 flex w-full flex-1 items-end px-5 sm:px-10 lg:mb-0 lg:items-center lg:px-20">
                     <div className="flex w-full max-w-[490px] flex-col items-start gap-8">
 
-                        {/* Titre — slide up reveal */}
+                        {/* ===== TITRE ===== */}
                         <div className="overflow-hidden">
                             <motion.h1
                                 id="residence-hero-title"
-                                initial={{ y: "100%", opacity: 0 }}
-                                animate={{ y: 0, opacity: 1 }}
-                                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
-                                className="font-display-display-medium text-[36px] leading-[44px] sm:text-[length:var(--display-display-medium-font-size)] font-[number:var(--display-display-medium-font-weight)] sm:leading-[var(--display-display-medium-line-height)] tracking-[var(--display-display-medium-letter-spacing)] text-white [font-style:var(--display-display-medium-font-style)]"
+                                initial={{
+                                    y: "100%",
+                                    opacity: 0,
+                                }}
+                                animate={{
+                                    y: 0,
+                                    opacity: 1,
+                                }}
+                                transition={{
+                                    duration: 1,
+                                    ease: [0.16, 1, 0.3, 1],
+                                    delay: 0.15,
+                                }}
+                                className="font-display-display-medium text-[36px] leading-[44px] text-white sm:text-[length:var(--display-display-medium-font-size)] sm:leading-[var(--display-display-medium-line-height)] font-[number:var(--display-display-medium-font-weight)] tracking-[var(--display-display-medium-letter-spacing)] [font-style:var(--display-display-medium-font-style)]"
                             >
                                 Une Oasis De Lumière Au Cœur De Dakar Plateau
                             </motion.h1>
                         </div>
 
-
-                        {/* Sous-titre */}
+                        {/* ===== SOUS-TITRE ===== */}
                         <div className="overflow-hidden">
                             <motion.p
-                                initial={{ y: "80%", opacity: 0 }}
-                                animate={{ y: 0, opacity: 1 }}
-                                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-                                className="max-w-[325px] lg:max-w-[490px] font-body-regular text-[14px] sm:text-[length:var(--body-regular-font-size)] font-[number:var(--body-regular-font-weight)] leading-[var(--body-regular-line-height)] tracking-[var(--body-regular-letter-spacing)] text-white/85 [font-style:var(--body-regular-font-style)]"
+                                initial={{
+                                    y: "80%",
+                                    opacity: 0,
+                                }}
+                                animate={{
+                                    y: 0,
+                                    opacity: 1,
+                                }}
+                                transition={{
+                                    duration: 0.9,
+                                    ease: [0.16, 1, 0.3, 1],
+                                    delay: 0.5,
+                                }}
+                                className="max-w-[325px] font-body-regular text-[14px] font-[number:var(--body-regular-font-weight)] leading-[var(--body-regular-line-height)] tracking-[var(--body-regular-letter-spacing)] text-white/85 [font-style:var(--body-regular-font-style)] sm:text-[length:var(--body-regular-font-size)] lg:max-w-[490px]"
                             >
-                                Architecture, nature et patrimoine réunis dans un micro-quartier
-                                résidentiel d&apos;exception.
+                                Architecture, nature et patrimoine réunis dans
+                                un micro-quartier résidentiel d&apos;exception.
                             </motion.p>
                         </div>
 
-                        {/* CTA */}
+                        {/* ===== CTA ===== */}
                         <motion.div
-                            initial={{ opacity: 0, y: 24 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.7, ease: "easeOut", delay: 0.85 }}
-                            className="flex flex-wrap gap-4 w-full lg:w-fit"
+                            initial={{
+                                opacity: 0,
+                                y: 24,
+                            }}
+                            animate={{
+                                opacity: 1,
+                                y: 0,
+                            }}
+                            transition={{
+                                duration: 0.7,
+                                ease: "easeOut",
+                                delay: 0.85,
+                            }}
+                            className="flex w-full flex-wrap gap-4 lg:w-fit"
                         >
-                            <Button className="h-auto  w-full rounded-none bg-[#2e2c2a]  px-7 py-4 font-button-small text-[length:var(--button-small-font-size)] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] text-white [font-style:var(--button-small-font-style)] hover:bg-[#8f7865] hover:border-[#8f7865] transition-colors duration-300">
-                                <a href="#concept">  EXPLORER KŌSEN</a>
-                            </Button>
-
+                            <a
+                                className="w-full lg:w-fit"
+                                href="#concept"
+                            >
+                                <Button
+                                    className="h-auto w-full rounded-none bg-[#2e2c2a] px-7 py-4 font-button-small text-[length:var(--button-small-font-size)] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] text-white transition-colors duration-300 hover:border-[#8f7865] hover:bg-[#8f7865] [font-style:var(--button-small-font-style)]"
+                                >
+                                    EXPLORER KŌSEN
+                                </Button>
+                            </a>
                         </motion.div>
                     </div>
                 </div>
-
-
             </section>
         </>
     );

@@ -28,7 +28,7 @@ const masterplanData: MasterplanItem[] = [
         description:
             "Une résidence fondatrice du micro-quartier, ouverte sur la ville et les espaces paysagers. Toutes les unités ont été livrées.",
         image: "/img/Photo-densemble-web.jpg",
-        link: ANCHORS.residences,
+        
     },
     {
         key: "kosen-one",
@@ -37,7 +37,7 @@ const masterplanData: MasterplanItem[] = [
         description:
             "Une résidence fondatrice du micro-quartier, ouverte sur la ville et les espaces paysagers. Toutes les unités ont été livrées.",
         image: "/img/kosen-one.jpg",
-        link: RESIDENCE_LINKS.kosenOne,
+        
     },
     {
         key: "kosen-two",
@@ -46,7 +46,7 @@ const masterplanData: MasterplanItem[] = [
         description:
             "Une résidence fondatrice du micro-quartier, ouverte sur la ville et les espaces paysagers. Toutes les unités ont été livrées.",
         image: "/img/kosen-two.jpg",
-        link: RESIDENCE_LINKS.kosenTwo,
+        
     },
     {
         key: "komorebi-one",
@@ -162,7 +162,7 @@ export const NeighborhoodMasterplanSection = (): JSX.Element => {
                                         <>
                                             <Button
                                                 asChild
-                                                className="h-auto w-full rounded-none bg-[#2e2c2a] px-6 py-4 font-button-small text-[length:var(--button-small-font-size)] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] text-[#eee9e5] hover:bg-[#2e2c2a]/90 [font-style:var(--button-small-font-style)]"
+                                                className="h-auto hidden w-full rounded-none bg-[#2e2c2a] px-6 py-4 font-button-small text-[length:var(--button-small-font-size)] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] text-[#eee9e5] hover:bg-[#2e2c2a]/90 [font-style:var(--button-small-font-style)]"
                                             >
                                                 <a href={selected.link ?? ANCHORS.residences}>
                                                     DÉCOUVRIR
