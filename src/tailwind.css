@@ -12,15 +12,15 @@
 /* 
   =============================================================
   POLICES COMMERCIALES : Gelion & ADAM.CG PRO
-  Dossier : public/fonts/
+  Dossier : src/assets/fonts/ (compilees par Vite, URLs relatives)
   =============================================================
 */
 
 /* Gelion Bold */
 @font-face {
   font-family: 'Gelion';
-  src: url('/fonts/Gelion-Bold.woff2') format('woff2'),
-       url('/fonts/Gelion-Bold.woff') format('woff');
+  src: url('./assets/fonts/Gelion-Bold.woff2') format('woff2'),
+       url('./assets/fonts/Gelion-Bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -29,7 +29,7 @@
 /* Gelion Regular */
 @font-face {
   font-family: 'Gelion';
-  src: url('/fonts/Gelion-Regular.woff') format('woff');
+  src: url('./assets/fonts/Gelion-Regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -38,9 +38,9 @@
 /* ADAM.CG PRO Regular */
 @font-face {
   font-family: 'ADAM.CG PRO';
-  src: url('/fonts/ADAM.CG PRO.woff2') format('woff2'),
-       url('/fonts/ADAM.CG PRO.woff') format('woff'),
-       url('/fonts/ADAM.CG PRO.ttf') format('truetype');
+  src: url('./assets/fonts/ADAM.CG PRO.woff2') format('woff2'),
+       url('./assets/fonts/ADAM.CG PRO.woff') format('woff'),
+       url('./assets/fonts/ADAM.CG PRO.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;

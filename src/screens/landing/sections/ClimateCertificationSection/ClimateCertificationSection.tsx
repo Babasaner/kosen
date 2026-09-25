@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "../../../../components/ui/card";
+import { assetUrl } from "../../../../lib/site";
 
 const climateFeatures = [
     { number: "01", label: "Ventilation naturelle" },
@@ -11,19 +12,19 @@ const climateFeatures = [
 
 const partnerImages = [
     {
-        src: "/img/acc.png",
+        src: "img/acc.png",
         className: "h-[63px] w-full object-contain bg-white",
     },
     {
-        src: "/img/vinci.png",
+        src: "img/vinci.png",
         className: "h-[63px] w-full object-contain bg-white",
     },
     {
-        src: "/img/aars.png",
+        src: "img/aars.png",
         className: "h-[63px] w-full object-contain bg-[#750805]",
     },
     {
-        src: "/img/mazars.png",
+        src: "img/mazars.png",
         className: "h-16 w-full object-contain bg-white",
     },
 ];
@@ -31,19 +32,19 @@ const partnerImages = [
 // Images du slideshow
 const slideImages = [
     {
-        src: "/img/kosen-green-space.jpg",
+        src: "img/kosen-green-space.jpg",
         caption: "Espaces verts",
     },
     {
-        src: "/img/kosen-hero.jpg",
+        src: "img/kosen-hero.jpg",
         caption: "Architecture",
     },
     {
-        src: "/img/kosen-one.jpg",
+        src: "img/kosen-one.jpg",
         caption: "KŌSEN One",
     },
     {
-        src: "/img/greenspace.jpg",
+        src: "img/greenspace.jpg",
         caption: "Nature urbaine",
     },
 ];
@@ -239,7 +240,7 @@ export const ClimateCertificationSection = (): JSX.Element => {
                                         key={image.src}
                                         className={image.className}
                                         alt="Partenaire"
-                                        src={image.src}
+                                        src={assetUrl(image.src)}
                                     />
                                 ))}
                             </div>
@@ -324,7 +325,7 @@ export const ClimateCertificationSection = (): JSX.Element => {
                             bg-center
                         "
                         style={{
-                            backgroundImage: `url(${slideImages[activeSlide].src})`,
+                            backgroundImage: `url('${assetUrl(slideImages[activeSlide].src)}')`,
                         }}
                         aria-label={slideImages[activeSlide].caption}
                         role="img"

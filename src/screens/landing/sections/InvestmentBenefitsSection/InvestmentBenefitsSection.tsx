@@ -1,65 +1,49 @@
 import { useRef } from "react";
 import type { MouseEvent as ReactMouseEvent, PointerEvent as ReactPointerEvent } from "react";
-import { Button } from "../../../../components/ui/button";
-import { Link } from "lucide-react";
+import { assetUrl } from "../../../../lib/site";
 
 const investmentSteps = [
     {
         number: "01",
         title: "Choix du bien",
         description: "Sélection selon votre projet.",
-        lineSrc: "/img/line.svg",
+        lineSrc: "img/line.svg",
         width: "xl:w-[187px]",
     },
     {
         number: "02",
         title: "Réservation",
         description: "Formalisation de votre intérêt.",
-        lineSrc: "/img/line.svg",
+        lineSrc: "img/line.svg",
         width: "xl:w-[201px]",
     },
     {
         number: "03",
         title: "Signature encadrée",
         description: "Un parcours documenté.",
-        lineSrc: "/img/line.svg",
+        lineSrc: "img/line.svg",
         width: "xl:w-[198px]",
     },
     {
         number: "04",
         title: "Paiements",
         description: "Selon l’avancement convenu.",
-        lineSrc: "/img/line.svg",
+        lineSrc: "img/line.svg",
         width: "xl:w-[196px]",
     },
     {
         number: "05",
         title: "Construction",
         description: "Suivi du projet.",
-        lineSrc: "/img/line.svg",
+        lineSrc: "img/line.svg",
         width: "xl:w-36",
     },
     {
         number: "06",
         title: "Remise des clés",
         description: "Accès à votre propriété.",
-        lineSrc: "/img/line.svg",
+        lineSrc: "img/line.svg",
         width: "xl:w-[161px]",
-    },
-];
-
-const actionButtons = [
-    {
-        label: "ÉTUDIER MON PROJET",
-        className:
-            "bg-[#2e2c2a] text-[#eee9e5] hover:bg-[#2e2c2a] hover:text-[#eee9e5]",
-            Link: "#diaspora",
-    },
-    {
-        label: "DEMANDER LES DISPONIBILITÉS",
-        className:
-            "bg-[#ac937e] text-[#eee9e5] hover:bg-[#ac937e] hover:text-[#eee9e5]",
-            Link: "#diaspora",
     },
 ];
 
@@ -145,7 +129,7 @@ export const InvestmentBenefitsSection = (): JSX.Element => {
                                 aria-hidden="true"
                                 className="h-3 w-3 rounded-[5.5px] bg-[#ac937e]"
                             />
-                            <img className="h-px w-fit lg:w-full object-left translate-y-4 sm:translate-y-5 lg:translate-y-5 xl:translate-y-6  " alt="Line" src={step.lineSrc} />
+                            <img className="h-px w-fit lg:w-full object-left translate-y-4 sm:translate-y-5 lg:translate-y-5 xl:translate-y-6  " alt="Line" src={assetUrl(step.lineSrc)} />
                             <div className="flex w-full flex-col items-start gap-2">
                                 <span className="h-3.5 font-caption-regular text-[length:var(--caption-regular-font-size)] font-[number:var(--caption-regular-font-weight)] leading-[var(--caption-regular-line-height)] tracking-[var(--caption-regular-letter-spacing)] text-[#2e2c2a] [font-style:var(--caption-regular-font-style)]">
                                     {step.number}
@@ -166,21 +150,6 @@ export const InvestmentBenefitsSection = (): JSX.Element => {
                         une étude personnalisée.
                     </p>
                 </aside>
-                <div className="flex flex-col w-full lg:w-fit items-start gap-4 sm:flex-row sm:gap-6">
-                    {actionButtons.map((action) => (
-                       
-                        <a className="w-full lg:w-fit" href={action.Link} key={action.Link}>
-                        <Button
-                            className={`h-auto w-full lg:w-fit rounded-none border-0 px-6 py-4 font-button-small text-[length:var(--button-small-font-size)] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] shadow-none [font-style:var(--button-small-font-style)] ${action.className}`}
-                            key={action.label}
-                            type="button"
-                        >
-                            
-                            {action.label}
-                        </Button>
-                        </a>
-                    ))}
-                </div>
             </div>
         </section>
     );

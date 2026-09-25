@@ -11,10 +11,6 @@ import { Checkbox } from "../../../../components/ui/checkbox";
 import { Input } from "../../../../components/ui/input";
 import { Label } from "../../../../components/ui/label";
 import {
-    RadioGroup,
-    RadioGroupItem,
-} from "../../../../components/ui/radio-group";
-import {
     Select,
     SelectContent,
     SelectItem,
@@ -22,32 +18,31 @@ import {
     SelectValue,
 } from "../../../../components/ui/select";
 import { SearchableSelect } from "../../../../components/ui/searchable-select";
-import { CONTACT } from "../../../../lib/site";
+import {
+    RESIDENCES,
+    WHATSAPP_URL,
+    assetUrl,
+    brochureForResidence,
+    brochureGroupsForScreen,
+    brochureHref,
+    type ResidenceId,
+} from "../../../../lib/site";
+import { trackFormSubmit, trackWhatsAppClick } from "../../../../lib/analytics";
 
 const investmentBenefits = [
-    {
-        number: "01",
-        description: "Produit immobilier de standard international",
-    },
-    {
-        number: "02",
-        description: "Financement structuré",
-    },
-    {
-        number: "03",
-        description: "Accompagnement notarial",
-    },
-    {
-        number: "04",
-        description: "Gestion locative dédiée",
-    },
+    { number: "01", description: "Standard international" },
+    { number: "02", description: "Financement structuré" },
+    { number: "03", description: "Accompagnement notarial" },
+    { number: "04", description: "Gestion locative dédiée" },
 ];
 
 const contactChannels = [
     { value: "email", label: "E-mail" },
     { value: "telephone", label: "Téléphone" },
     { value: "whatsapp", label: "WhatsApp" },
-];
+] as const;
+
+const CONTACT_CHANNEL_VALUES = contactChannels.map((channel) => channel.value);
 
 const countries = [
     { value: "afghanistan", label: "Afghanistan", dialCode: "+93" },
@@ -248,36 +243,36 @@ const countries = [
     { value: "autre", label: "Autre pays", dialCode: "" },
 ];
 
-const projectOptions = [
-    { value: "kosen-one", label: "KŌSEN One" },
-    { value: "kosen-two", label: "KŌSEN Two" },
-    { value: "komorebi-one", label: "KŌMOREBI One" },
-    { value: "business-center", label: "KŌSEN Business Center" },
-    { value: "micro-quartier", label: "Le micro-quartier KŌSEN" },
-    { value: "indecis", label: "Autres" },
-];
+const projectOptions = RESIDENCES.map((residence) => ({
+    value: residence.id,
+    label: residence.name,
+}));
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const InvestmentInquirySection = (): JSX.Element => {
     const [country, setCountry] = useState("");
-    const [language, setLanguage] = useState("francais");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
-    const [property, setProperty] = useState("");
-    const [contactChannel, setContactChannel] = useState("email");
+    const [property, setProperty] = useState<ResidenceId | "">("");
+    const [wantsCallback, setWantsCallback] = useState(false);
+    const [contactChannel, setContactChannel] = useState("");
     const [consent, setConsent] = useState(false);
     const [error, setError] = useState("");
-    const [dialog, setDialog] = useState<"review" | "success" | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [dialog, setDialog] = useState<"success" | null>(null);
+    const [openGroup, setOpenGroup] = useState<string | null>(null);
 
     const dialCode = countries.find((item) => item.value === country)?.dialCode ?? "";
     const countryLabel = countries.find((item) => item.value === country)?.label ?? country;
     const propertyLabel =
-        projectOptions.find((item) => item.value === property)?.label ?? property;
-    const languageLabel =
-        { francais: "Français", anglais: "Anglais", wolof: "Wolof", arabe: "Arabe" }[language] ?? language;
-    const contactChannelLabel =
-        contactChannels.find((channel) => channel.value === contactChannel)?.label ?? contactChannel;
+        RESIDENCES.find((item) => item.id === property)?.name ?? "";
+
+    // Two brochure buttons, the one matching the selected residence first.
+    const brochureGroups = brochureGroupsForScreen(property);
+    const selectedBrochure = brochureForResidence(property);
 
     const handlePhoneChange = (value: string): void => {
         const hasInternationalPrefix = value.trim().startsWith("+");
@@ -295,56 +290,125 @@ export const InvestmentInquirySection = (): JSX.Element => {
         setPhone(digits);
     };
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
         event.preventDefault();
         setError("");
+
+        if (!firstName.trim() || !lastName.trim()) {
+            setError("Merci d'indiquer votre nom et votre prénom.");
+            return;
+        }
+
         if (!country) {
             setError("Merci de sélectionner votre pays de résidence pour obtenir le bon indicatif.");
             return;
         }
-        if (!EMAIL_PATTERN.test(email)) {
+
+        if (!EMAIL_PATTERN.test(email.trim())) {
             setError("Merci de renseigner un e-mail valide pour être recontacté.");
             return;
         }
+
         const phoneDigits = phone.replace(/\D/g, "");
+
         if (phoneDigits.length < 4) {
             setError("Merci d'indiquer un numéro de téléphone pour que l'on puisse vous joindre.");
             return;
         }
+
         if (!property) {
             setError("Merci de choisir le bien qui vous intéresse.");
             return;
         }
+
+        // Asking for a callback only makes sense with an explicit channel: a
+        // silent default would invent a preference the lead never gave.
+        if (wantsCallback && !contactChannel) {
+            setError("Merci d'indiquer le canal par lequel vous souhaitez être recontacté.");
+            return;
+        }
+
         if (!consent) {
             setError("Merci d'accepter d'être recontacté par KŌSEN.");
             return;
         }
-        setDialog("review");
-    };
 
-    const handleConfirm = (): void => {
-        setCountry("");
-        setLanguage("francais");
-        setEmail("");
-        setPhone("");
-        setProperty("");
-        setContactChannel("email");
-        setConsent(false);
-        setError("");
-        setDialog("success");
+        setIsSubmitting(true);
+
+        try {
+            const response = await fetch("/api/leads", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    firstName,
+                    lastName,
+                    email,
+                    phone: `${dialCode} ${phone}`.trim(),
+                    country: countryLabel,
+                    property: propertyLabel,
+                    wantsCallback,
+                    contactChannel: wantsCallback ? contactChannel : "",
+                    consent,
+                    // Honeypot: real visitors never fill this in.
+                    website: "",
+                }),
+            });
+
+            const result = (await response.json().catch(() => ({}))) as { message?: string };
+
+            // The success screen is only shown when the email actually went out.
+            if (!response.ok) {
+                if (response.status === 503) {
+                    throw new Error(
+                        result.message ||
+                            "Le service d'envoi est momentanément indisponible. Écrivez-nous sur WhatsApp, nous répondons rapidement.",
+                    );
+                }
+
+                if (response.status >= 500) {
+                    throw new Error(
+                        "L'envoi n'a pas abouti de notre côté. Réessayez dans un instant, ou contactez-nous sur WhatsApp.",
+                    );
+                }
+
+                throw new Error(result.message || "Votre demande n'a pas pu être envoyée.");
+            }
+
+            trackFormSubmit({
+                bien: propertyLabel,
+                pays: countryLabel,
+                rappel: wantsCallback,
+            });
+
+            setDialog("success");
+        } catch (submissionError) {
+            // A thrown fetch means the request never reached the API: the form
+            // is served without the server running, or the network is down.
+            const isNetworkFailure =
+                submissionError instanceof TypeError ||
+                (submissionError instanceof Error && submissionError.message === "Failed to fetch");
+
+            setError(
+                isNetworkFailure
+                    ? "Le formulaire n'est pas connecté au serveur d'envoi.Sinon, contactez-nous sur WhatsApp."
+                    : submissionError instanceof Error
+                      ? submissionError.message
+                      : "L'envoi a échoué. Veuillez réessayer.",
+            );
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const openWhatsApp = (): void => {
-        const message = encodeURIComponent(
-            "Bonjour KŌSEN, j'aimerais échanger à propos d'un projet immobilier à Dakar."
-        );
-        window.open(`https://wa.me/${CONTACT.whatsappNumber}?text=${message}`, "_blank", "noopener,noreferrer");
+        trackWhatsAppClick("form");
+        window.open(WHATSAPP_URL, "_blank", "noopener,noreferrer");
     };
 
     return (
-        <section id="diaspora" className="w-full scroll-mt-24 bg-white px-5 py-10 lg:py-0 sm:px-10   lg:px-20 ">
+        <section id="diaspora" className="w-full scroll-mt-24 bg-white px-5 py-10 lg:py-0 sm:px-10 lg:px-20">
             <div className="mx-auto grid w-full grid-cols-1 gap-10 lg:grid-cols-[minmax(0,520px)_minmax(0,1fr)_minmax(0,518.64px)] lg:gap-0">
-                <div className="flex flex-col items-start justify-center gap-6 lg:col-start-1 lg:row-start-1 lg:self-center">
+                <div className="order-2 flex flex-col items-start justify-center gap-6 lg:order-none lg:col-start-1 lg:row-start-1 lg:self-center">
                     <p className="font-caption-regular text-center md:text-left text-[length:var(--caption-regular-font-size)] font-[number:var(--caption-regular-font-weight)] leading-[var(--caption-regular-line-height)] tracking-[var(--caption-regular-letter-spacing)] text-[#ac937e] [font-style:var(--caption-regular-font-style)]">
                         DIASPORA
                     </p>
@@ -354,36 +418,36 @@ export const InvestmentInquirySection = (): JSX.Element => {
                     </h2>
 
                     <p className="font-body-regular text-[length:var(--body-regular-font-size)] font-[number:var(--body-regular-font-weight)] leading-[var(--body-regular-line-height)] tracking-[var(--body-regular-letter-spacing)] text-[#2e2c2a] [font-style:var(--body-regular-font-style)]">
-                        Vous souhaitez investir à Dakar, vous constituer un patrimoine,
-                        préparer votre retour. KŌSEN a structuré un dispositif complet,
-                        conforme aux standards des grandes places financières européennes.
+                        Un dispositif conforme aux standards des grandes places
+                        financières européennes, pour constituer un patrimoine ou
+                        préparer votre retour.
                     </p>
 
-                    <dl className="grid w-full grid-cols-2 border-t border-[#2e2c2a2e]">
+                    <ul className="grid w-full grid-cols-2 border-t border-[#2e2c2a2e]">
                         {investmentBenefits.map((benefit, index) => (
-                            <div
+                            <li
                                 key={benefit.number}
-                                className={`min-h-[90px] border-b border-[#2e2c2a2e] py-[25px] font-body-bold text-[length:var(--body-bold-font-size)] font-[number:var(--body-bold-font-weight)] leading-[var(--body-bold-line-height)] tracking-[var(--body-bold-letter-spacing)] text-[#2e2c2a] [font-style:var(--body-bold-font-style)] ${index % 2 === 0
+                                className={`min-h-[72px] border-b border-[#2e2c2a2e] py-[18px] font-body-bold text-[length:var(--body-bold-font-size)] font-[number:var(--body-bold-font-weight)] leading-[var(--body-bold-line-height)] tracking-[var(--body-bold-letter-spacing)] text-[#2e2c2a] [font-style:var(--body-bold-font-style)] ${index % 2 === 0
                                     ? "border-r border-[#2e2c2a2e] pr-[18px]"
                                     : "pl-[18px]"
                                     }`}
                             >
-                                <dt>{benefit.number}</dt>
-                                <dd>{benefit.description}</dd>
-                            </div>
+                                {benefit.description}
+                            </li>
                         ))}
-                    </dl>
+                    </ul>
                 </div>
                 <img
-                    className="order-2 h-auto w-full object-cover lg:col-start-3 lg:row-start-1 lg:order-none lg:h-[879px] lg:w-[599px] lg:max-w-none"
+                    className="order-3 h-auto w-full object-cover lg:col-start-3 lg:row-start-1 lg:order-none lg:h-[879px] lg:w-[599px] lg:max-w-none"
                     alt="Photo d'ensemble Kōsen"
-                    src="/img/4b036e24d3230745fddd0ec50f95690afc0a1c4a.png"
+                    src={assetUrl("img/4b036e24d3230745fddd0ec50f95690afc0a1c4a.png")}
+                    loading="lazy"
                 />
 
-                <Card className="order-3 w-full rounded-none  bg-[#e6ded8] shadow-none lg:col-start-3 lg:row-start-1 lg:order-none lg:self-center">
+                <Card className="order-1 w-full rounded-none bg-[#e6ded8] shadow-none lg:col-start-3 lg:row-start-1 lg:order-none lg:self-center">
                     <CardHeader className="p-8 pb-0">
                         <CardTitle className="font-headings-h4 text-[length:var(--headings-h4-font-size)] font-[number:var(--headings-h4-font-weight)] leading-[var(--headings-h4-line-height)] tracking-[var(--headings-h4-letter-spacing)] text-[#2e2c2a] [font-style:var(--headings-h4-font-style)]">
-                            Parler à un conseiller diaspora
+                            Recevoir la brochure
                         </CardTitle>
                     </CardHeader>
 
@@ -394,12 +458,22 @@ export const InvestmentInquirySection = (): JSX.Element => {
                             noValidate
                         >
                             <div className="space-y-4">
+                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                    <div className="flex flex-col gap-2">
+                                        <Label htmlFor="first-name">PRÉNOM *</Label>
+                                        <Input id="first-name" name="firstName" autoComplete="given-name" className="h-10 rounded-none border-0 border-b border-[#ac937e] bg-transparent px-0 shadow-none focus-visible:ring-0" value={firstName} onChange={(event) => setFirstName(event.target.value)} required />
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                        <Label htmlFor="last-name">NOM *</Label>
+                                        <Input id="last-name" name="lastName" autoComplete="family-name" className="h-10 rounded-none border-0 border-b border-[#ac937e] bg-transparent px-0 shadow-none focus-visible:ring-0" value={lastName} onChange={(event) => setLastName(event.target.value)} required />
+                                    </div>
+                                </div>
                                 <div className="flex flex-col gap-2">
                                     <Label
                                         htmlFor="country"
                                         className="font-caption-regular text-[length:var(--caption-regular-font-size)] font-[number:var(--caption-regular-font-weight)] leading-[var(--caption-regular-line-height)] tracking-[var(--caption-regular-letter-spacing)] text-[#2e2c2a] [font-style:var(--caption-regular-font-style)]"
                                     >
-                                        PAYS DE RÉSIDENCE
+                                        PAYS DE RÉSIDENCE *
                                     </Label>
 
                                     <SearchableSelect
@@ -419,39 +493,6 @@ export const InvestmentInquirySection = (): JSX.Element => {
 
                                 <div className="flex flex-col gap-2">
                                     <Label
-                                        htmlFor="language"
-                                        className="font-caption-regular text-[length:var(--caption-regular-font-size)] font-[number:var(--caption-regular-font-weight)] leading-[var(--caption-regular-line-height)] tracking-[var(--caption-regular-letter-spacing)] text-[#2e2c2a] [font-style:var(--caption-regular-font-style)]"
-                                    >
-                                        LANGUE PRÉFÉRÉE
-                                    </Label>
-
-                                    <Select value={language} onValueChange={setLanguage}>
-                                        <SelectTrigger
-                                            id="language"
-                                            className="h-11 rounded-none border-0 border-b border-[#ac937e] bg-transparent px-0 font-body-regular text-[length:var(--body-regular-font-size)] font-[number:var(--body-regular-font-weight)] leading-[var(--body-regular-line-height)] tracking-[var(--body-regular-letter-spacing)] text-[#6d6b6a] shadow-none focus:ring-0 [font-style:var(--body-regular-font-style)]"
-                                        >
-                                            <SelectValue />
-                                        </SelectTrigger>
-
-                                        <SelectContent>
-                                            <SelectItem value="francais">
-                                                Français
-                                            </SelectItem>
-                                            <SelectItem value="anglais">
-                                                Anglais
-                                            </SelectItem>
-                                            <SelectItem value="wolof">
-                                                Wolof
-                                            </SelectItem>
-                                            <SelectItem value="arabe">
-                                                Arabe
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-
-                                <div className="flex flex-col gap-2">
-                                    <Label
                                         htmlFor="email"
                                         className="font-caption-regular text-[length:var(--caption-regular-font-size)] font-[number:var(--caption-regular-font-weight)] leading-[var(--caption-regular-line-height)] tracking-[var(--caption-regular-letter-spacing)] text-[#2e2c2a] [font-style:var(--caption-regular-font-style)]"
                                     >
@@ -460,10 +501,16 @@ export const InvestmentInquirySection = (): JSX.Element => {
 
                                     <Input
                                         id="email"
+                                        name="email"
                                         type="email"
+                                        inputMode="email"
+                                        autoComplete="email"
+                                        autoCapitalize="none"
+                                        spellCheck={false}
                                         value={email}
                                         onChange={(event) => setEmail(event.target.value)}
                                         className="h-11 rounded-none border-0 border-b border-[#ac937e] bg-transparent px-0 shadow-none focus-visible:ring-0"
+                                        required
                                     />
                                 </div>
 
@@ -483,8 +530,10 @@ export const InvestmentInquirySection = (): JSX.Element => {
                                         )}
                                         <Input
                                             id="phone"
+                                            name="phone"
                                             type="tel"
                                             inputMode="tel"
+                                            autoComplete="tel"
                                             value={phone}
                                             onChange={(event) => handlePhoneChange(event.target.value)}
                                             placeholder={
@@ -493,6 +542,7 @@ export const InvestmentInquirySection = (): JSX.Element => {
                                                     : "Ex : 78 797 89 89"
                                             }
                                             className="h-11 flex-1 rounded-none border-0 bg-transparent px-0 shadow-none focus-visible:ring-0"
+                                            required
                                         />
                                     </div>
                                     <span className="[font-family:'Gelion-Regular',Helvetica] text-[11.4px] font-normal leading-[17px] text-[#6d6b6a]">
@@ -505,10 +555,13 @@ export const InvestmentInquirySection = (): JSX.Element => {
                                         htmlFor="property"
                                         className="font-caption-regular text-[length:var(--caption-regular-font-size)] font-[number:var(--caption-regular-font-weight)] leading-[var(--caption-regular-line-height)] tracking-[var(--caption-regular-letter-spacing)] text-[#2e2c2a] [font-style:var(--caption-regular-font-style)]"
                                     >
-                                        BIEN RECHERCHÉ
+                                        BIEN RECHERCHÉ *
                                     </Label>
 
-                                    <Select value={property} onValueChange={setProperty}>
+                                    <Select
+                                        value={property}
+                                        onValueChange={(value: ResidenceId) => setProperty(value)}
+                                    >
                                         <SelectTrigger
                                             id="property"
                                             className="h-11 rounded-none border-0 border-b border-[#ac937e] bg-transparent px-0 font-body-regular text-[length:var(--body-regular-font-size)] font-[number:var(--body-regular-font-weight)] leading-[var(--body-regular-line-height)] tracking-[var(--body-regular-letter-spacing)] text-[#6d6b6a] shadow-none focus:ring-0 [font-style:var(--body-regular-font-style)]"
@@ -524,40 +577,86 @@ export const InvestmentInquirySection = (): JSX.Element => {
                                             ))}
                                         </SelectContent>
                                     </Select>
+
+                                    {selectedBrochure ? (
+                                        <a
+                                            href={brochureHref(selectedBrochure.file)}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.08em] text-[#2e2c2a] underline decoration-[#ac937e] underline-offset-4 transition-colors hover:decoration-[#2e2c2a]"
+                                        >
+                                            <svg
+                                                className="h-3 w-3"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                aria-hidden="true"
+                                            >
+                                                <path d="M12 3v12" />
+                                                <path d="m7 12 5 5 5-5" />
+                                                <path d="M5 21h14" />
+                                            </svg>
+                                            Consulter la brochure {selectedBrochure.label.replace("Brochure ", "")} (PDF)
+                                        </a>
+                                    ) : null}
                                 </div>
                             </div>
 
-                            <fieldset className="mt-4">
-                                <legend className="[font-family:'Gelion-Regular',Helvetica] text-[12.8px] font-normal leading-[19.2px] text-[#2e2c2a]">
-                                    Canal de contact préféré
-                                </legend>
-
-                                <RadioGroup
-                                    value={contactChannel}
-                                    onValueChange={setContactChannel}
-                                    className="mt-2 flex flex-wrap gap-x-4 gap-y-2"
-                                >
-                                    {contactChannels.map((channel) => (
-                                        <div
-                                            key={channel.value}
-                                            className="flex items-center gap-2"
+                            <div className="mt-4 flex items-start gap-3">
+                                <Checkbox
+                                    id="callback"
+                                    checked={wantsCallback}
+                                    onCheckedChange={(checked) => {
+                                        const isChecked = checked === true;
+                                        setWantsCallback(isChecked);
+                                        if (!isChecked) {
+                                            setContactChannel("");
+                                        }
+                                    }}
+                                />
+                                <Label htmlFor="callback">Je souhaite être rappelé par un conseiller</Label>
+                            </div>
+                            {wantsCallback && (
+                                <div className="mt-4 flex flex-col gap-2">
+                                    <Label
+                                        htmlFor="contact-channel"
+                                        className="flex items-center gap-1"
+                                    >
+                                        <span aria-hidden="true">*</span>
+                                        CANAL PRÉFÉRÉ
+                                    </Label>
+                                    <Select
+                                        value={contactChannel}
+                                        onValueChange={(value: (typeof CONTACT_CHANNEL_VALUES)[number]) =>
+                                            setContactChannel(value)
+                                        }
+                                    >
+                                        <SelectTrigger
+                                            id="contact-channel"
+                                            aria-required="true"
+                                            aria-invalid={!contactChannel}
+                                            className={`h-11 rounded-none border-0 border-b bg-transparent px-0 font-body-regular text-[length:var(--body-regular-font-size)] font-[number:var(--body-regular-font-weight)] leading-[var(--body-regular-line-height)] tracking-[var(--body-regular-letter-spacing)] shadow-none focus:ring-0 [font-style:var(--body-regular-font-style)] ${
+                                                contactChannel
+                                                    ? "text-[#2e2c2a]"
+                                                    : "text-[#6d6b6a]"
+                                            } ${
+                                                !contactChannel ? "border-b-[#2e2c2a]" : "border-b-[#ac937e]"
+                                            }`}
                                         >
-                                            <RadioGroupItem
-                                                value={channel.value}
-                                                id={channel.value}
-                                                className="h-[13px] w-[13px] border-[#2e2c2a] text-[#2e2c2a]"
-                                            />
+                                            <SelectValue placeholder="Choisissez un canal" />
+                                        </SelectTrigger>
 
-                                            <Label
-                                                htmlFor={channel.value}
-                                                className="[font-family:'Gelion-Regular',Helvetica] text-[14.4px] font-normal leading-[21.6px] text-black"
-                                            >
-                                                {channel.label}
-                                            </Label>
-                                        </div>
-                                    ))}
-                                </RadioGroup>
-                            </fieldset>
+                                        <SelectContent>
+                                            {contactChannels.map((channel) => (
+                                                <SelectItem key={channel.value} value={channel.value}>
+                                                    {channel.label}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            )}
 
                             <div className="mt-4 flex items-start gap-3">
                                 <Checkbox
@@ -571,16 +670,35 @@ export const InvestmentInquirySection = (): JSX.Element => {
                                     htmlFor="consent"
                                     className="[font-family:'Gelion-Regular',Helvetica] text-[13.1px] font-normal leading-[19.7px] text-[#2e2c2a]"
                                 >
-                                    J&apos;accepte que KŌSEN me recontacte au sujet de ma demande.
+                                    J&apos;accepte que KŌSEN me recontacte au sujet de ma demande. Voir nos{" "}
+                                    <a
+                                        className="underline"
+                                        href="https://kosen-project.com/mentions-legales/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        mentions légales
+                                    </a>{" "}
+                                    et notre{" "}
+                                    <a
+                                        className="underline"
+                                        href="https://kosen-project.com/politique-de-confidentialite/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        politique de confidentialité
+                                    </a>
+                                    .
                                 </Label>
                             </div>
 
                             <div className="mt-6 flex flex-col gap-3">
                                 <Button
                                     type="submit"
+                                    disabled={isSubmitting}
                                     className="h-11 w-full rounded-none bg-[#2e2c2a] px-6 font-button-default text-[length:var(--button-default-font-size)] font-[number:var(--button-default-font-weight)] leading-[var(--button-default-line-height)] tracking-[var(--button-default-letter-spacing)] text-white hover:bg-[#2e2c2a] [font-style:var(--button-default-font-style)]"
                                 >
-                                    ÉTUDIER MON PROJET
+                                    {isSubmitting ? "ENVOI EN COURS..." : "RECEVOIR LA BROCHURE"}
                                 </Button>
 
                                 <Button
@@ -611,7 +729,7 @@ export const InvestmentInquirySection = (): JSX.Element => {
             </div>
             {dialog && (
                 <div
-                    className="fixed inset-0 z-[100] flex items-center justify-center bg-[#2e2c2acc] px-5 py-8"
+                    className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-[#2e2c2acc] px-5 py-8"
                     role="presentation"
                     onMouseDown={(event) => {
                         if (event.target === event.currentTarget) {
@@ -625,59 +743,88 @@ export const InvestmentInquirySection = (): JSX.Element => {
                         aria-labelledby="inquiry-dialog-title"
                         className="w-full max-w-[520px] border border-[#ac937e] bg-[#e6ded8] p-6 text-[#2e2c2a] shadow-2xl sm:p-8"
                     >
-                        {dialog === "review" ? (
-                            <>
-                                <p className="font-caption-regular text-[12px] tracking-[0.08em] text-[#ac937e]">
-                                    DERNIÈRE VÉRIFICATION
-                                </p>
-                                <h3 id="inquiry-dialog-title" className="mt-2 font-headings-h4 text-2xl leading-tight">
-                                    Votre demande est prête
-                                </h3>
-                                <p className="mt-3 font-body-regular text-sm leading-6">
-                                    Vérifiez vos informations avant de les transmettre à notre équipe.
-                                </p>
-                                <dl className="mt-6 divide-y divide-[#2e2c2a2e] border-y border-[#2e2c2a2e] text-sm">
-                                    <div className="flex justify-between gap-4 py-3"><dt className="text-[#6d6b6a]">Pays</dt><dd className="text-right font-medium">{countryLabel}</dd></div>
-                                    <div className="flex justify-between gap-4 py-3"><dt className="text-[#6d6b6a]">E-mail</dt><dd className="break-all text-right font-medium">{email}</dd></div>
-                                    <div className="flex justify-between gap-4 py-3"><dt className="text-[#6d6b6a]">Téléphone</dt><dd className="text-right font-medium">{dialCode} {phone}</dd></div>
-                                    <div className="flex justify-between gap-4 py-3"><dt className="text-[#6d6b6a]">Projet</dt><dd className="text-right font-medium">{propertyLabel}</dd></div>
-                                    <div className="flex justify-between gap-4 py-3"><dt className="text-[#6d6b6a]">Contact par</dt><dd className="text-right font-medium">{contactChannelLabel}</dd></div>
-                                    <div className="flex justify-between gap-4 py-3"><dt className="text-[#6d6b6a]">Langue</dt><dd className="text-right font-medium">{languageLabel}</dd></div>
-                                </dl>
-                                <div className="mt-6 flex flex-col gap-3 sm:flex-row-reverse">
-                                    <Button
-                                        type="button"
-                                        onClick={handleConfirm}
-                                        className="h-11 flex-1 rounded-none bg-[#2e2c2a] font-button-default text-white hover:bg-[#2e2c2a]"
-                                    >
-                                        ENVOYER MA DEMANDE
-                                    </Button>
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        onClick={() => setDialog(null)}
-                                        className="h-11 flex-1 rounded-none border-[#2e2c2a] bg-transparent text-[#2e2c2a] hover:bg-transparent hover:text-[#2e2c2a]"
-                                    >
-                                        MODIFIER
-                                    </Button>
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                <p className="font-caption-regular text-[12px] tracking-[0.08em] text-[#ac937e]">DEMANDE TRANSMISE</p>
-                                <h3 id="inquiry-dialog-title" className="mt-2 font-headings-h4 text-2xl leading-tight">Merci pour votre intérêt pour KŌSEN</h3>
-                                <p className="mt-4 font-body-regular text-sm leading-6">
-                                    Merci pour la confiance que vous accordez à KŌSEN. Votre projet immobilier à Dakar mérite une attention particulière : notre équipe vous contactera prochainement pour vous présenter les opportunités les plus adaptées à vos ambitions.
-                                </p>
-                                <Button
-                                    type="button"
-                                    onClick={() => setDialog(null)}
-                                    className="mt-6 h-11 w-full rounded-none bg-[#2e2c2a] font-button-default text-white hover:bg-[#2e2c2a]"
-                                >
-                                    FERMER
-                                </Button>
-                            </>
-                        )}
+                        <p className="font-caption-regular text-[12px] tracking-[0.08em] text-[#ac937e]">DEMANDE TRANSMISE</p>
+                        <h3 id="inquiry-dialog-title" className="mt-2 font-headings-h4 text-2xl leading-tight">Votre demande est enregistrée</h3>
+                        <p className="mt-4 font-body-regular text-sm leading-6">
+                            Un conseiller KŌSEN vous recontactera prochainement pour vous présenter les
+                            disponibilités. Téléchargez la brochure de votre choix ci-dessous.
+                        </p>
+
+                        <div className="mt-6 flex flex-col gap-3">
+                            {brochureGroups.map((group) => {
+                                const isSelected = group.residenceIds.some(
+                                    (id) => id === property,
+                                );
+                                const isOpen = openGroup === group.id;
+                                const hasChoices = group.files.length > 1;
+
+                                return (
+                                    <div key={group.id}>
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                hasChoices
+                                                    ? setOpenGroup(isOpen ? null : group.id)
+                                                    : window.open(
+                                                          brochureHref(group.files[0].file),
+                                                          "_blank",
+                                                          "noopener,noreferrer",
+                                                      )
+                                            }
+                                            aria-expanded={hasChoices ? isOpen : undefined}
+                                            className={`flex h-11 w-full items-center justify-center gap-2 rounded-none border px-4 text-center text-[11px] font-medium uppercase tracking-[0.08em] transition-colors ${
+                                                isSelected
+                                                    ? "border-[#2e2c2a] bg-[#2e2c2a] text-white"
+                                                    : "border-[#2e2c2a] bg-transparent text-[#2e2c2a] hover:bg-[#2e2c2a] hover:text-white"
+                                            }`}
+                                        >
+                                            {group.label}
+                                            {hasChoices ? (
+                                                <svg
+                                                    className={`h-3 w-3 transition-transform ${isOpen ? "rotate-180" : ""}`}
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="2"
+                                                    aria-hidden="true"
+                                                >
+                                                    <path d="m6 9 6 6 6-6" />
+                                                </svg>
+                                            ) : null}
+                                        </button>
+
+                                        {hasChoices && isOpen ? (
+                                            <div className="mt-2 flex flex-col gap-2">
+                                                {group.files.map((brochure) => (
+                                                    <a
+                                                        key={brochure.file}
+                                                        href={brochureHref(brochure.file)}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className={`flex h-11 items-center justify-center gap-2 rounded-none border px-4 text-center text-[11px] font-medium uppercase tracking-[0.08em] transition-colors ${
+                                                            brochure.residenceId === property
+                                                                ? "border-[#ac937e] bg-transparent text-[#2e2c2a]"
+                                                                : "border-[#ac937e] bg-transparent text-[#2e2c2a] opacity-70"
+                                                        }`}
+                                                    >
+                                                        {brochure.label}
+                                                        {brochure.residenceId === property ? " — votre choix" : ""}
+                                                    </a>
+                                                ))}
+                                            </div>
+                                        ) : null}
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        <Button
+                            type="button"
+                            onClick={() => setDialog(null)}
+                            className="mt-6 h-11 w-full rounded-none bg-[#2e2c2a] font-button-default text-white hover:bg-[#2e2c2a]"
+                        >
+                            FERMER
+                        </Button>
                     </div>
                 </div>
             )}

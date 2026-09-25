@@ -1,6 +1,3 @@
-import { Button } from "../../../../components/ui/button";
-import { ANCHORS } from "../../../../lib/site";
-
 export const ResidenceIntroductionSection = (): JSX.Element => {
     return (
         <section id="concept" className="flex scroll-mt-24 flex-col lg:flex-row w-full self-stretch items-start lg:items-end justify-between bg-[#e6ded8] gap-12 lg:gap-0 px-5 py-16 sm:px-10 lg:px-20 lg:py-[120px]">
@@ -20,14 +17,6 @@ export const ResidenceIntroductionSection = (): JSX.Element => {
                     autour de la lumière, de la végétation et d&apos;une architecture
                     adaptée à Dakar.
                 </p>
-                <a className="w-full lg:w-fit" href={ANCHORS.planDeMasse}>
-                <Button
-                    type="button"
-                    className="h-auto w-full lg:w-auto gap-2.5 rounded-none bg-[#2e2c2a] px-6 py-4 font-button-small text-[length:var(--button-small-font-size)] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] text-[#eee9e5] hover:bg-[#3b3936] transition-colors [font-style:var(--button-small-font-style)]"
-                >
-                     COMPRENDRE LA VISION
-                </Button>
-                </a>
             </div>
         </section>
     );

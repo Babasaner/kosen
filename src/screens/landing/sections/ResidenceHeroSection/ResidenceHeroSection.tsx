@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "../../../../components/ui/button";
 import {
     ANCHORS,
+    assetUrl,
     navigationItems,
     smoothScrollTo,
 } from "../../../../lib/site";
@@ -22,6 +23,11 @@ export const ResidenceHeroSection = (): JSX.Element => {
             window.removeEventListener("scroll", handleScroll);
         };
     }, []);
+
+    const goToForm = (): void => {
+        setIsMenuOpen(false);
+        smoothScrollTo(ANCHORS.diaspora);
+    };
 
     return (
         <>
@@ -47,7 +53,7 @@ export const ResidenceHeroSection = (): JSX.Element => {
                         }
                     >
                         <img
-                            src="/img/logo-white.png"
+                            src={assetUrl("img/logo-white.png")}
                             alt="Logo KŌSEN"
                             className="block h-[28px] w-auto object-contain sm:h-[34px]"
                         />
@@ -85,12 +91,18 @@ export const ResidenceHeroSection = (): JSX.Element => {
                     {/* ===== CTA + BURGER ===== */}
                     <div className="flex items-center gap-4">
                         {/* CTA Desktop / Tablet */}
-                        <a href={ANCHORS.diaspora}>
+                        <a
+                            href={ANCHORS.diaspora}
+                            onClick={(event) => {
+                                event.preventDefault();
+                                goToForm();
+                            }}
+                        >
                             <Button
                                 variant="outline"
                                 className="hidden h-auto shrink-0 rounded-none border-[#ac937e] bg-transparent px-4 py-3 font-button-small text-[10px] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] text-white transition-all hover:border-[#ac937e] hover:bg-[#ac937e]/20 hover:text-white sm:flex sm:px-6 sm:py-4 sm:text-[length:var(--button-small-font-size)] [font-style:var(--button-small-font-style)]"
                             >
-                                PARLER À UN CONSEILLER
+                                RECEVOIR LA BROCHURE
                             </Button>
                         </a>
 
@@ -109,7 +121,7 @@ export const ResidenceHeroSection = (): JSX.Element => {
                             aria-expanded={isMenuOpen}
                         >
                             <img
-                                src="/img/Landing/Link.svg"
+                                src={assetUrl("img/Landing/Link.svg")}
                                 alt="Menu"
                                 className="h-[56px] w-[46px] object-contain sm:h-8 sm:w-8"
                             />
@@ -167,8 +179,9 @@ export const ResidenceHeroSection = (): JSX.Element => {
                                     <li className="w-full border-t border-white/10 pt-2">
                                         <a
                                             href={ANCHORS.diaspora}
-                                            onClick={() => {
-                                                setIsMenuOpen(false);
+                                            onClick={(event) => {
+                                                event.preventDefault();
+                                                goToForm();
                                             }}
                                             className="block w-full"
                                         >
@@ -176,7 +189,7 @@ export const ResidenceHeroSection = (): JSX.Element => {
                                                 variant="outline"
                                                 className="mt-2 h-auto w-full rounded-none border-[#ac937e] bg-transparent px-6 py-4 font-button-small text-[12px] font-[number:var(--button-small-font-weight)] tracking-[var(--button-small-letter-spacing)] text-white hover:bg-white/10"
                                             >
-                                                PARLER À UN CONSEILLER
+                                                RECEVOIR LA BROCHURE
                                             </Button>
                                         </a>
                                     </li>
@@ -192,10 +205,10 @@ export const ResidenceHeroSection = (): JSX.Element => {
             {/* ========================================================= */}
 
             <section
+                id="top"
                 className="relative flex min-h-[100vh] w-full flex-col overflow-hidden bg-cover bg-center bg-no-repeat text-white"
                 style={{
-                    backgroundImage:
-                        "linear-gradient(0deg, rgba(46,44,42,0.72) 0%, rgba(46,44,42,0.5) 100%), url('/img/kosen-hero.jpg')",
+                    backgroundImage: `linear-gradient(0deg, rgba(46,44,42,0.72) 0%, rgba(46,44,42,0.5) 100%), url('${assetUrl("img/kosen-hero.jpg")}')`,
                 }}
                 aria-labelledby="residence-hero-title"
             >
@@ -228,7 +241,7 @@ export const ResidenceHeroSection = (): JSX.Element => {
                                 }}
                                 className="font-display-display-medium text-[36px] leading-[44px] text-white sm:text-[length:var(--display-display-medium-font-size)] sm:leading-[var(--display-display-medium-line-height)] font-[number:var(--display-display-medium-font-weight)] tracking-[var(--display-display-medium-letter-spacing)] [font-style:var(--display-display-medium-font-style)]"
                             >
-                                Une Oasis De Lumière Au Cœur De Dakar Plateau
+                                Appartements à vendre à Dakar Plateau
                             </motion.h1>
                         </div>
 
@@ -250,8 +263,9 @@ export const ResidenceHeroSection = (): JSX.Element => {
                                 }}
                                 className="max-w-[325px] font-body-regular text-[14px] font-[number:var(--body-regular-font-weight)] leading-[var(--body-regular-line-height)] tracking-[var(--body-regular-letter-spacing)] text-white/85 [font-style:var(--body-regular-font-style)] sm:text-[length:var(--body-regular-font-size)] lg:max-w-[490px]"
                             >
-                                Architecture, nature et patrimoine réunis dans
-                                un micro-quartier résidentiel d&apos;exception.
+                                Une oasis de lumière au cœur de Dakar Plateau. 24
+                                appartements de 146 à 430 m², à partir de 269.000.000
+                                FCFA, livrés ou en VEFA.
                             </motion.p>
                         </div>
 
@@ -274,12 +288,16 @@ export const ResidenceHeroSection = (): JSX.Element => {
                         >
                             <a
                                 className="w-full lg:w-fit"
-                                href="#concept"
+                                href={ANCHORS.diaspora}
+                                onClick={(event) => {
+                                    event.preventDefault();
+                                    goToForm();
+                                }}
                             >
                                 <Button
                                     className="h-auto w-full rounded-none bg-[#2e2c2a] px-7 py-4 font-button-small text-[length:var(--button-small-font-size)] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] text-white transition-colors duration-300 hover:border-[#8f7865] hover:bg-[#8f7865] [font-style:var(--button-small-font-style)]"
                                 >
-                                    EXPLORER KŌSEN
+                                    RECEVOIR LA BROCHURE
                                 </Button>
                             </a>
                         </motion.div>

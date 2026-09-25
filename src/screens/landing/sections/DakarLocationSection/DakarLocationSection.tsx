@@ -1,6 +1,7 @@
 import { type CSSProperties, useState } from "react";
 import { Button } from "../../../../components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { assetUrl } from "../../../../lib/site";
 
 const mapLocations = [
     {
@@ -85,12 +86,12 @@ export const DakarLocationSection = (): JSX.Element => {
                     <img
                         className="block h-auto w-full object-cover lg:hidden"
                         alt="Carte de Dakar montrant KŌSEN et les lieux environnants"
-                        src="/img/map_kosen.png"
+                        src={assetUrl("img/map_kosen.png")}
                     />
                     <img
                         className="hidden h-auto w-full object-cover lg:block"
                         alt="Map of Dakar showing KŌSEN and nearby landmarks"
-                        src="/img/map.png"
+                        src={assetUrl("img/map.png")}
                     />
                     <figcaption className="sr-only">
                         Carte de Dakar indiquant KŌSEN, le Port, le Grand Théâtre national,
