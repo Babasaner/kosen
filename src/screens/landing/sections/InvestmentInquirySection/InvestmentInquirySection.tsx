@@ -264,15 +264,32 @@ export const InvestmentInquirySection = (): JSX.Element => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [dialog, setDialog] = useState<"success" | null>(null);
     const [openGroup, setOpenGroup] = useState<string | null>(null);
+    // Kept after the form is cleared so the confirmation screen can still
+    // highlight the brochure of the residence that was actually requested.
+    const [submittedProperty, setSubmittedProperty] = useState<ResidenceId | "">("");
 
     const dialCode = countries.find((item) => item.value === country)?.dialCode ?? "";
     const countryLabel = countries.find((item) => item.value === country)?.label ?? country;
     const propertyLabel =
         RESIDENCES.find((item) => item.id === property)?.name ?? "";
 
-    // Two brochure buttons, the one matching the selected residence first.
-    const brochureGroups = brochureGroupsForScreen(property);
     const selectedBrochure = brochureForResidence(property);
+    // Ordered by what was actually sent, not by the cleared form.
+    const submittedBrochureGroups = brochureGroupsForScreen(submittedProperty);
+
+    const resetForm = (): void => {
+        setCountry("");
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setPhone("");
+        setProperty("");
+        setWantsCallback(false);
+        setContactChannel("");
+        setConsent(false);
+        setError("");
+        setOpenGroup(null);
+    };
 
     const handlePhoneChange = (value: string): void => {
         const hasInternationalPrefix = value.trim().startsWith("+");
@@ -380,6 +397,10 @@ export const InvestmentInquirySection = (): JSX.Element => {
                 rappel: wantsCallback,
             });
 
+            // Remember the requested residence, then leave the form empty for the
+            // next visitor.
+            setSubmittedProperty(property);
+            resetForm();
             setDialog("success");
         } catch (submissionError) {
             // A thrown fetch means the request never reached the API: the form
@@ -751,9 +772,9 @@ export const InvestmentInquirySection = (): JSX.Element => {
                         </p>
 
                         <div className="mt-6 flex flex-col gap-3">
-                            {brochureGroups.map((group) => {
+                            {submittedBrochureGroups.map((group) => {
                                 const isSelected = group.residenceIds.some(
-                                    (id) => id === property,
+                                    (id) => id === submittedProperty,
                                 );
                                 const isOpen = openGroup === group.id;
                                 const hasChoices = group.files.length > 1;
@@ -802,13 +823,13 @@ export const InvestmentInquirySection = (): JSX.Element => {
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                         className={`flex h-11 items-center justify-center gap-2 rounded-none border px-4 text-center text-[11px] font-medium uppercase tracking-[0.08em] transition-colors ${
-                                                            brochure.residenceId === property
+                                                            brochure.residenceId === submittedProperty
                                                                 ? "border-[#ac937e] bg-transparent text-[#2e2c2a]"
                                                                 : "border-[#ac937e] bg-transparent text-[#2e2c2a] opacity-70"
                                                         }`}
                                                     >
                                                         {brochure.label}
-                                                        {brochure.residenceId === property ? " — votre choix" : ""}
+                                                        {brochure.residenceId === submittedProperty ? " — votre choix" : ""}
                                                     </a>
                                                 ))}
                                             </div>
