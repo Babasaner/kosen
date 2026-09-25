@@ -15,6 +15,7 @@ import {
     missingBrevoVariables,
     corsHeaders,
 } from "./lead-api.mjs";
+import { handleHealthCheck } from "./health.mjs";
 
 const port = Number(process.env.PORT || 8787);
 const maxBodySize = 16 * 1024;
@@ -116,7 +117,20 @@ const sendResult = (response, result) => {
 
 const server = createServer(async (request, response) => {
     try {
-        const isLeadsPath = (request.url ?? "").split("?")[0] === "/api/leads";
+        const requestUrl = new URL(request.url ?? "/", "http://localhost");
+        const pathname = requestUrl.pathname;
+
+        if (pathname === "/api/health" && (request.method === "GET" || request.method === "HEAD")) {
+            const health = await handleHealthCheck({
+                wantsProbe: requestUrl.searchParams.has("probe"),
+            });
+
+            response.writeHead(health.status, { "cache-control": "no-store" });
+            response.end(JSON.stringify(health.payload));
+            return;
+        }
+
+        const isLeadsPath = pathname === "/api/leads";
 
         if (isLeadsPath && request.method === "OPTIONS") {
             sendResult(
