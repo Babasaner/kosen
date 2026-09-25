@@ -233,14 +233,35 @@ export const validateLead = (input) => {
 
 // --------------------------------------------------------------------- brevo
 
+/**
+ * Environment values are always trimmed. A value pasted into a hosting
+ * dashboard often carries a trailing space or newline, which passes a simple
+ * "is it set" check but is then rejected by the API as an invalid key or an
+ * unknown sender.
+ */
+const readEnv = (name) => {
+    const value = process.env[name];
+    return typeof value === "string" ? value.trim() : "";
+};
+
 export const sendLeadToBrevo = async (lead) => {
-    const apiKey = process.env.BREVO_API_KEY;
-    const recipientEmail = process.env.BREVO_RECIPIENT_EMAIL;
-    const senderEmail = process.env.BREVO_SENDER_EMAIL;
-    const senderName = process.env.BREVO_SENDER_NAME || "KŌSEN";
+    const apiKey = readEnv("BREVO_API_KEY");
+    const recipientEmail = readEnv("BREVO_RECIPIENT_EMAIL");
+    const senderEmail = readEnv("BREVO_SENDER_EMAIL");
+    const senderName = readEnv("BREVO_SENDER_NAME") || "KŌSEN";
 
     if (!apiKey || !recipientEmail || !senderEmail) {
-        throw new Error("BREVO_NOT_CONFIGURED");
+        const missing = [
+            ["BREVO_API_KEY", apiKey],
+            ["BREVO_RECIPIENT_EMAIL", recipientEmail],
+            ["BREVO_SENDER_EMAIL", senderEmail],
+        ]
+            .filter(([, value]) => !value)
+            .map(([name]) => name);
+
+        const error = new Error("BREVO_NOT_CONFIGURED");
+        error.missing = missing;
+        throw error;
     }
 
     const subject = `Demande landing KŌSEN : ${lead.property}, ${lead.country}`;
@@ -275,8 +296,10 @@ export const sendLeadToBrevo = async (lead) => {
 
     if (!brevoResponse.ok) {
         const detail = await brevoResponse.text();
-        console.error("Brevo rejected lead", brevoResponse.status, detail);
-        throw new Error("BREVO_SEND_FAILED");
+        const error = new Error("BREVO_SEND_FAILED");
+        error.upstreamStatus = brevoResponse.status;
+        error.upstreamDetail = detail.slice(0, 500);
+        throw error;
     }
 
     const result = (await brevoResponse.json()).messageId;
@@ -352,22 +375,43 @@ export const handleLeadRequest = async ({ method, origin, clientIp, body }) => {
         return jsonResponse(200, { ok: true }, origin);
     } catch (error) {
         const notConfigured = error instanceof Error && error.message === "BREVO_NOT_CONFIGURED";
+        const upstreamStatus = error?.upstreamStatus;
+        const upstreamDetail = error?.upstreamDetail;
 
-        console.error("Lead submission failed", error);
+        if (notConfigured) {
+            console.error(
+                `Lead submission failed: missing environment variable(s) ${(error.missing || []).join(", ")}. ` +
+                    "Set them in the hosting dashboard (watch out for trailing spaces) and redeploy.",
+            );
+        } else {
+            console.error(
+                `Lead submission failed: Brevo returned ${upstreamStatus ?? "no response"}`,
+                upstreamDetail ?? error,
+            );
+        }
 
-        return jsonResponse(
-            notConfigured ? 503 : 500,
-            {
-                message: notConfigured
-                    ? "Le service de réception des demandes n'est pas configuré."
-                    : "L'envoi a échoué. Veuillez réessayer.",
-            },
-            origin,
-        );
+        const payload = {
+            message: notConfigured
+                ? "Le service de réception des demandes n'est pas configuré."
+                : "L'envoi a échoué. Veuillez réessayer.",
+        };
+
+        // Opt-in diagnostics, for debugging a deployment without exposing the
+        // provider's response to the public. Never on unless explicitly set.
+        if (readEnv("LEAD_DIAGNOSTICS") === "true") {
+            payload.diagnostics = {
+                notConfigured,
+                missing: error?.missing,
+                upstreamStatus,
+                upstreamDetail,
+            };
+        }
+
+        return jsonResponse(notConfigured ? 503 : 500, payload, origin);
     }
 };
 
 export const missingBrevoVariables = () =>
     ["BREVO_API_KEY", "BREVO_RECIPIENT_EMAIL", "BREVO_SENDER_EMAIL"].filter(
-        (name) => !process.env[name],
+        (name) => !readEnv(name),
     );
