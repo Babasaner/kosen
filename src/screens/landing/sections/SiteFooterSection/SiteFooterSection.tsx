@@ -22,6 +22,15 @@ export const SiteFooterSection = (): JSX.Element => {
                 />
             </div>
 
+            {/* Lien vers le site principal, tout en bas et au-dessus des mentions */}
+            <a
+                href={SITE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-caption-bold text-[length:var(--caption-bold-font-size)] font-[number:var(--caption-bold-font-weight)] leading-[var(--caption-bold-line-height)] tracking-[var(--caption-bold-letter-spacing)] text-[#ac937e] transition-colors hover:text-[#e6ded8] [font-style:var(--caption-bold-font-style)]"
+            >
+                KOSEN-PROJECT.COM
+            </a>
             <div className="flex w-full max-w-[845px] flex-col gap-5 text-[#585655] md:flex-row md:items-center md:justify-between">
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                     <span className="font-body-regular text-[length:var(--body-regular-font-size)] font-[number:var(--body-regular-font-weight)] tracking-[var(--body-regular-letter-spacing)] leading-[var(--body-regular-line-height)] [font-style:var(--body-regular-font-style)]">
@@ -63,15 +72,6 @@ export const SiteFooterSection = (): JSX.Element => {
                 </nav>
             </div>
 
-            {/* Lien vers le site principal, tout en bas et au-dessus des mentions */}
-            <a
-                href={SITE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-caption-bold text-[length:var(--caption-bold-font-size)] font-[number:var(--caption-bold-font-weight)] leading-[var(--caption-bold-line-height)] tracking-[var(--caption-bold-letter-spacing)] text-[#ac937e] transition-colors hover:text-[#e6ded8] [font-style:var(--caption-bold-font-style)]"
-            >
-                KOSEN-PROJECT.COM
-            </a>
         </footer>
     );
 };

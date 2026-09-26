@@ -44,7 +44,7 @@ export const NeighborhoodMasterplanSection = (): JSX.Element => {
                 {RESIDENCES.map((residence, index) => (
                     <motion.li
                         key={residence.id}
-                        className="relative flex min-h-[340px] flex-1 flex-col items-start justify-end overflow-hidden lg:min-h-[420px]"
+                        className="relative flex min-h-[400px] flex-1 flex-col items-start justify-end overflow-hidden lg:min-h-[900px]"
                         initial={{ opacity: 0, y: 24 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, amount: 0.2 }}
@@ -75,7 +75,7 @@ export const NeighborhoodMasterplanSection = (): JSX.Element => {
                                 {residence.status}
                             </p>
 
-                            <p className="font-headings-h4 w-fit text-[length:var(--headings-h4-font-size)] font-[number:var(--headings-h4-font-weight)] leading-[var(--headings-h4-line-height)] tracking-[var(--headings-h4-letter-spacing)] text-[#e6ded8] [font-style:var(--headings-h4-font-style)]">
+                            <p className="font-headings-h4 w-fit whitespace-wrap text-[length:var(--headings-h4-font-size)] font-[number:var(--headings-h4-font-weight)] leading-[var(--headings-h4-line-height)] tracking-[var(--headings-h4-letter-spacing)] text-[#e6ded8] [font-style:var(--headings-h4-font-style)]">
                                 {residence.price}
                             </p>
                         </div>

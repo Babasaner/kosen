@@ -33,11 +33,10 @@ export const ResidenceHeroSection = (): JSX.Element => {
         <>
             {/* ===== HEADER FIXED STICKY ===== */}
             <header
-                className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 ease-in-out ${
-                    scrolled
+                className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 ease-in-out ${scrolled
                         ? "bg-[#2e2c2a]/96 backdrop-blur-md shadow-[0_2px_24px_rgba(0,0,0,0.25)]"
                         : "bg-transparent"
-                }`}
+                    }`}
             >
                 <div className="relative mx-auto flex min-h-[80px] w-full max-w-[1920px] items-center justify-between px-5 py-4 sm:px-10 lg:px-20">
                     {/* ===== LOGO ===== */}
@@ -102,7 +101,7 @@ export const ResidenceHeroSection = (): JSX.Element => {
                                 variant="outline"
                                 className="hidden h-auto shrink-0 rounded-none border-[#ac937e] bg-transparent px-4 py-3 font-button-small text-[10px] font-[number:var(--button-small-font-weight)] leading-[var(--button-small-line-height)] tracking-[var(--button-small-letter-spacing)] text-white transition-all hover:border-[#ac937e] hover:bg-[#ac937e]/20 hover:text-white sm:flex sm:px-6 sm:py-4 sm:text-[length:var(--button-small-font-size)] [font-style:var(--button-small-font-style)]"
                             >
-                                RECEVOIR LA BROCHURE
+                                PARLER À UN CONSEILLER
                             </Button>
                         </a>
 
@@ -189,7 +188,7 @@ export const ResidenceHeroSection = (): JSX.Element => {
                                                 variant="outline"
                                                 className="mt-2 h-auto w-full rounded-none border-[#ac937e] bg-transparent px-6 py-4 font-button-small text-[12px] font-[number:var(--button-small-font-weight)] tracking-[var(--button-small-letter-spacing)] text-white hover:bg-white/10"
                                             >
-                                                RECEVOIR LA BROCHURE
+                                                PARLER À UN CONSEILLER
                                             </Button>
                                         </a>
                                     </li>
@@ -220,7 +219,7 @@ export const ResidenceHeroSection = (): JSX.Element => {
 
                 {/* Contenu centré verticalement */}
                 <div className="mx-auto mb-10 flex w-full flex-1 items-end px-5 sm:px-10 lg:mb-0 lg:items-center lg:px-20">
-                    <div className="flex w-full max-w-[490px] flex-col items-start gap-8">
+                    <div className="flex w-full max-w-[600px] flex-col items-start gap-8">
 
                         {/* ===== TITRE ===== */}
                         <div className="overflow-hidden">
@@ -241,7 +240,8 @@ export const ResidenceHeroSection = (): JSX.Element => {
                                 }}
                                 className="font-display-display-medium text-[36px] leading-[44px] text-white sm:text-[length:var(--display-display-medium-font-size)] sm:leading-[var(--display-display-medium-line-height)] font-[number:var(--display-display-medium-font-weight)] tracking-[var(--display-display-medium-letter-spacing)] [font-style:var(--display-display-medium-font-style)]"
                             >
-                                Appartements à vendre à Dakar Plateau
+                                Appartements d’exception
+                                à vendre à Dakar - Plateau
                             </motion.h1>
                         </div>
 

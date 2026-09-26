@@ -186,25 +186,28 @@ export const Landing = (): JSX.Element => {
                     <ClimateCertificationSection />
                 </FadeIn>
 
-                {/* 5. Demande : formulaire avant le texte sur mobile */}
-                <FadeIn delay={0.1}>
-                    <InvestmentInquirySection />
-                </FadeIn>
 
                 {/* 6. KŌMOREBI, projet en VEFA */}
                 <FadeIn delay={0.1}>
                     <ResidencePortfolioSection />
                 </FadeIn>
 
+
+
                 {/* 7. Engagement 100.000 arbres, avec la localisation */}
                 <FadeIn delay={0.1}>
                     <UrbanReforestationSection />
+                </FadeIn>
+                {/* 5. Demande : formulaire avant le texte sur mobile */}
+                <FadeIn delay={0.1}>
+                    <InvestmentInquirySection />
                 </FadeIn>
 
                 {/* 8. Parcours d'investissement VEFA */}
                 <FadeIn delay={0.1}>
                     <InvestmentBenefitsSection />
                 </FadeIn>
+
 
                 {/* 9. Localisation */}
                 <FadeIn delay={0.1}>

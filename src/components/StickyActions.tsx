@@ -9,8 +9,9 @@ interface StickyActionsProps {
 }
 
 /**
- * The two actions the client asked to keep, reachable at any scroll position on
- * both mobile and desktop, since most of the traffic comes from mobile.
+ * The two actions the client asked to keep, reachable at any scroll position.
+ * Mobile only: below the lg breakpoint, where the bar disappears entirely since
+ * the desktop layout already exposes both actions in the page.
  */
 export const StickyActions = ({ hidden = false }: StickyActionsProps): JSX.Element => {
     const [isVisible, setIsVisible] = useState(false);
@@ -32,7 +33,7 @@ export const StickyActions = ({ hidden = false }: StickyActionsProps): JSX.Eleme
 
     return (
         <div
-            className={`fixed inset-x-0 bottom-0 z-[70] w-full border-t border-[#43413f] bg-[#2e2c2a] transition-transform duration-300 ease-out ${
+            className={`fixed inset-x-0 bottom-0 z-[70] w-full border-t border-[#43413f] bg-[#2e2c2a] transition-transform duration-300 ease-out lg:hidden ${
                 isVisible && !hidden ? "translate-y-0" : "translate-y-full"
             }`}
         >
